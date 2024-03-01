@@ -1,5 +1,6 @@
 import express from "express";
 import config from "../config";
+import authRoutes from "./components/auth/public/authRoutes";
 import fileRoutes from "./components/file/public/fileRoutes";
 import { initDbConnection } from "./db";
 import { handleError } from "./middlewares/handleError";
@@ -9,6 +10,7 @@ const PORT = config.port;
 
 app.use(express.json());
 
+app.use("/auth", authRoutes);
 app.use("/file", fileRoutes);
 app.use(handleError);
 

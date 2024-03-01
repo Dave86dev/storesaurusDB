@@ -20,7 +20,7 @@ export const uploadFile = async (
     }
 
     const fileId = await gridFsService.saveFile(req.file);
-    res.json({ message: "File uploaded successfully", fileId });
+    res.status(201).json({ message: "File uploaded successfully", fileId });
   } catch (error) {
     next(error);
   }
