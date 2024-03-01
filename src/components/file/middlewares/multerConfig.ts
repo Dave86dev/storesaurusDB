@@ -1,23 +1,28 @@
-import multer, { FileFilterCallback } from 'multer';
-import { customRequest } from '../../../interfaces';
+import multer, { FileFilterCallback } from "multer";
+import { Request as CustomRequest } from "express";
+const allowedTypes: string[] = ["text/csv"];
 
-const allowedTypes: string[] = [
-    'text/csv'
-];
+interface invalidFile extends CustomRequest {
+  invalidFile?: string;
+}
 
-const fileFilter = (req: customRequest, file: Express.Multer.File, cb: FileFilterCallback) => {
-    if (allowedTypes.includes(file.mimetype)) {
-        cb(null, true);
-    } else {
-        req.fileValidationError = 'Invalid file type';
-        //bad news amigos...
-        cb(null, false); 
-    }
+const fileFilter = (
+  req: invalidFile,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    req.invalidFile = "Invalid file type";
+    //bad news amigos...
+    cb(null, false);
+  }
 };
 
 const upload = multer({
-    storage: multer.memoryStorage(),
-    fileFilter: fileFilter,
+  storage: multer.memoryStorage(),
+  fileFilter: fileFilter,
 });
 
 export default upload;
