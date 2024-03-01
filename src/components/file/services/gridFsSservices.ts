@@ -1,3 +1,4 @@
+import * as errors from "restify-errors";
 import { GridFSBucket, Db, ObjectId } from "mongodb";
 import { PassThrough } from "stream";
 
@@ -10,7 +11,6 @@ export default class GridFsService {
 
   async saveFile(file: Express.Multer.File): Promise<ObjectId> {
     return new Promise((resolve, reject) => {
-
       const options = {
         metadata: {
           mimetype: file.mimetype,
@@ -26,7 +26,9 @@ export default class GridFsService {
       bufferStream.end(file.buffer);
       bufferStream
         .pipe(uploadStream)
-        .on("error", reject)
+        .on("error", (error) =>
+          reject(new errors.InternalServerError(error.message))
+        )
         .on("finish", () => resolve(uploadStream.id));
     });
   }
@@ -39,7 +41,12 @@ export default class GridFsService {
         .find({ _id: new ObjectId(FileId) })
         .toArray();
 
-      const mimeType = files[0].metadata?.mimetype || "application/octet-stream";
+      if (files.length === 0) {
+        throw new errors.NotFoundError("File not found.");
+      }
+
+      const mimeType =
+        files[0].metadata?.mimetype || "application/octet-stream";
 
       const downloadStream = this.bucket.openDownloadStream(
         new ObjectId(FileId)
@@ -47,7 +54,10 @@ export default class GridFsService {
       const chunks: Buffer[] = [];
 
       return new Promise((resolve, reject) => {
-        downloadStream.on("error", reject);
+        
+        downloadStream.on("error", (error) => {
+          reject(new errors.NotFoundError(error.message));
+        });
 
         downloadStream.on("data", (chunk) => {
           chunks.push(chunk);
@@ -55,7 +65,7 @@ export default class GridFsService {
 
         downloadStream.on("end", () => {
           if (chunks.length === 0) {
-            reject(new Error("File not found or is empty"));
+            reject(new errors.NotFoundError("File not found or is empty"));
           } else {
             const fileBuffer = Buffer.concat(chunks);
             const content = fileBuffer.toString("utf8");
@@ -63,10 +73,8 @@ export default class GridFsService {
           }
         });
       });
-    } catch (err) {
-      console.error("Error retrieving file metadata:", err);
-      throw err;
+    } catch (error) {
+      throw new errors.NotFoundError('Error accessing file.');
     }
   }
 }
-

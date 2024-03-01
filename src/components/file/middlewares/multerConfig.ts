@@ -1,13 +1,10 @@
 import multer, { FileFilterCallback } from "multer";
-import { Request as CustomRequest } from "express";
+import express from "express";
+
 const allowedTypes: string[] = ["text/csv"];
 
-interface invalidFile extends CustomRequest {
-  invalidFile?: string;
-}
-
 const fileFilter = (
-  req: invalidFile,
+  req: express.Request,
   file: Express.Multer.File,
   cb: FileFilterCallback
 ) => {
@@ -15,7 +12,6 @@ const fileFilter = (
     cb(null, true);
   } else {
     req.invalidFile = "Invalid file type";
-    //bad news amigos...
     cb(null, false);
   }
 };

@@ -1,5 +1,6 @@
-import * as Papa from 'papaparse';
-import { csvAnalysis } from '../../../../interfaces';
+import * as errors from "restify-errors";
+import * as Papa from "papaparse";
+import { csvAnalysis } from "../../../../interfaces";
 
 export const csvAnalysisHelper = async (csvContent: string): Promise<csvAnalysis[]> => {
     return new Promise((resolve, reject) => {
@@ -17,7 +18,9 @@ export const csvAnalysisHelper = async (csvContent: string): Promise<csvAnalysis
 
                 resolve(missingValuesReport);
             },
-            error: (error) => reject(error),
+            error: (error) => {
+                reject(new errors.BadRequestError(`CSV parsing error: ${error.message}`));
+            }
         });
     });
 };
