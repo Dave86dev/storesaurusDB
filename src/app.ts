@@ -1,11 +1,15 @@
 import express from 'express';
 import config from '../config';
+import fileRoutes from './components/file/public/fileRoutes';
 import { initDbConnection } from './db'; 
 
 const app = express();
 const PORT = config.port;
 
+
 app.use(express.json());
+
+app.use('/file', fileRoutes);
 
 const startServer = async () => {
     try {
