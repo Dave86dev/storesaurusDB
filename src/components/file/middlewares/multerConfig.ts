@@ -8,6 +8,7 @@ const fileFilter = (
   file: Express.Multer.File,
   cb: FileFilterCallback
 ) => {
+  
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
