@@ -4,7 +4,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
 export const decodeJwt = (
-  err: any,
   req: Request,
   res: Response,
   next: NextFunction
@@ -40,7 +39,6 @@ export const decodeJwt = (
     if (error instanceof jwt.JsonWebTokenError) {
       return next(new errors.UnauthorizedError("Invalid or expired token"));
     }
-    // jwt.NotBeforeError ... jwt.TokenExpiredError
     return next(
       new errors.InternalServerError(
         "An error occurred while processing the authentication token"
