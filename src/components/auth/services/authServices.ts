@@ -10,7 +10,6 @@ export class AuthService {
     const db = getDb();
 
     try {
-      //user data validation ... to be done.....
 
       newUser.password = await hashPassword(newUser.password);
 
@@ -28,8 +27,6 @@ export class AuthService {
 
   async loginUser(credentials: credentials): Promise<any> {
     const db = getDb();
-
-    //user credentials validation... to be done...
 
     let { email, password } = credentials;
 

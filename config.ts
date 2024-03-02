@@ -12,7 +12,7 @@ const config: config = {
   port: parseInt(process.env.PORT || '3000', 10),
   rounds: parseInt(process.env.ROUNDS),
   mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase',
-  secretKey: process.env.SECRET_KEY || 'yoursecret',
+  secretKey: process.env.JWT_SECRET || 'yoursecret',
 };
 
 if (!process.env.MONGO_URI) {
