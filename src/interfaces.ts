@@ -17,3 +17,7 @@ export interface credentials {
   email: string;
   password: string;
 }
+
+export interface preRequestJsonData {
+  userId: string
+}

@@ -7,9 +7,10 @@ import { uploadFile, checkFile } from "./controllers/fileController";
 
 const router = express.Router();
 
-//Exceptional error-handling due to Multer non-compatibility with the way Express
-//handles the errors.
-router.post("/upload", decodeJwt, authorizeUser, upload.single("file"), (req, res, next) => {
+/*Exceptional error-handling due to Multer non-compatibility with the way Express
+handles the errors. Also, authorizeUser goes after upload otherwise Multer cannot bring form-data. what a world ;-)
+*/
+router.post("/upload", decodeJwt, upload.single("file"), authorizeUser, (req, res, next) => {
     if (req.invalidFile) {
         return next(new errors.UnsupportedMediaTypeError(req.invalidFile));
     }
