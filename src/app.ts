@@ -1,12 +1,12 @@
 import express from "express";
-import config from "../config";
+import appConfig from "../config";
 import authRoutes from "./components/auth/authRoutes";
 import fileRoutes from "./components/file/fileRoutes";
 import { initDbConnection } from "./db";
 import { handleError } from "./middlewares/handleError";
 
 const app = express();
-const PORT = config.port;
+const PORT = appConfig.port;
 
 app.use(express.json());
 

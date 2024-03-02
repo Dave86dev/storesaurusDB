@@ -10,12 +10,13 @@ export class AuthService {
     const db = getDb();
 
     try {
-
       newUser.password = await hashPassword(newUser.password);
 
       await db.collection("Users_Collection").insertOne(newUser);
-    } catch (error) {
-      if (error.code === 11000) {
+    } catch (error: unknown) {
+      const dbError = error as { code?: number };
+
+      if (dbError.code === 11000) {
         throw new errors.ConflictError("Email already registered");
       } else {
         throw new errors.InternalServerError(

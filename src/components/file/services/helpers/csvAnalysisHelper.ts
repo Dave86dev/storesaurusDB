@@ -10,7 +10,8 @@ export const csvAnalysisHelper = async (csvContent: string): Promise<csvAnalysis
             complete: (result) => {
                 const missingValuesReport: csvAnalysis[] = [];
                 result.data.forEach((row, index) => {
-                    const missingColumns = Object.keys(row).filter(key => row[key] === "" || row[key] === null || row[key] === undefined);
+                    const safeRow = row as { [key: string]: string | null | undefined }
+                    const missingColumns = Object.keys(safeRow).filter(key => safeRow[key] === "" || safeRow[key] === null || safeRow[key] === undefined);
                     if (missingColumns.length > 0) {
                         missingValuesReport.push({ rowIndex: index + 1, missingColumns });
                     }
@@ -18,7 +19,8 @@ export const csvAnalysisHelper = async (csvContent: string): Promise<csvAnalysis
 
                 resolve(missingValuesReport);
             },
-            error: (error) => {
+            //seen in papaparse documentation
+            error: (error : {message: string}) => {
                 reject(new errors.BadRequestError(`CSV parsing error: ${error.message}`));
             }
         });

@@ -8,9 +8,9 @@ interface config {
   secretKey: string;
 }
 
-const config: config = {
+const appConfig: config = {
   port: parseInt(process.env.PORT || '3000', 10),
-  rounds: parseInt(process.env.ROUNDS),
+  rounds: parseInt(process.env.ROUNDS || '10', 10),
   mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase',
   secretKey: process.env.JWT_SECRET || 'yoursecret',
 };
@@ -20,4 +20,4 @@ if (!process.env.MONGO_URI) {
   process.exit(1);
 }
 
-export default config;
+export default appConfig;

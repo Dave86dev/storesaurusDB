@@ -1,5 +1,5 @@
 import * as errors from "restify-errors";
-import config from "../../config";
+import appConfig from "../../config";
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
@@ -19,7 +19,7 @@ export const authJwt = (req: Request, res: Response, next: NextFunction) => {
 
   const accessToken = parts[1];
   try {
-    const decodedToken = jwt.verify(accessToken, config.secretKey);
+    const decodedToken = jwt.verify(accessToken, appConfig.secretKey);
 
     if (typeof decodedToken === "object" && decodedToken !== null) {
       req.user = decodedToken;
