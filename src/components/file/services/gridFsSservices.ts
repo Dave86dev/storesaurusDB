@@ -9,11 +9,12 @@ export default class GridFsService {
     this.bucket = new GridFSBucket(db, { bucketName: "uploads" });
   }
 
-  async saveFile(file: Express.Multer.File): Promise<ObjectId> {
+  async saveFile(file: Express.Multer.File, userId: string): Promise<ObjectId> {
     return new Promise((resolve, reject) => {
       const options = {
         metadata: {
           mimetype: file.mimetype,
+          userId: userId,
         },
       };
 
@@ -35,7 +36,7 @@ export default class GridFsService {
 
   async getFile(
     FileId: string
-  ): Promise<{ content: string; mimeType: string }> {
+  ): Promise<{ content: string; owner: string; mimeType: string }> {
     try {
       const files = await this.bucket
         .find({ _id: new ObjectId(FileId) })
@@ -45,8 +46,9 @@ export default class GridFsService {
         throw new errors.NotFoundError("File not found.");
       }
 
-      const mimeType =
-        files[0].metadata?.mimetype || "application/octet-stream";
+      const mimeType = files[0].metadata?.mimetype || "application/octet-stream";
+      
+      const owner = files[0].metadata?.userId;
 
       const downloadStream = this.bucket.openDownloadStream(
         new ObjectId(FileId)
@@ -54,7 +56,6 @@ export default class GridFsService {
       const chunks: Buffer[] = [];
 
       return new Promise((resolve, reject) => {
-        
         downloadStream.on("error", (error) => {
           reject(new errors.NotFoundError(error.message));
         });
@@ -69,12 +70,12 @@ export default class GridFsService {
           } else {
             const fileBuffer = Buffer.concat(chunks);
             const content = fileBuffer.toString("utf8");
-            resolve({ content, mimeType });
+            resolve({ content, owner, mimeType });
           }
         });
       });
     } catch (error) {
-      throw new errors.NotFoundError('Error accessing file.');
+      throw new errors.NotFoundError("Error accessing file.");
     }
   }
 }
