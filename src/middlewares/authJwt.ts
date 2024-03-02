@@ -3,7 +3,7 @@ import config from "../../config";
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
-export const decodeJwt = (req: Request, res: Response, next: NextFunction) => {
+export const authJwt = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
