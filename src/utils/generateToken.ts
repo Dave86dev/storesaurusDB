@@ -1,20 +1,17 @@
-
-import { userDB } from "../components/auth/models/user"
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
+import appConfig from "../../config";
+import { userDB } from "../components/auth/models/user";
 
 export const generateToken = (user: userDB): string => {
+  const payload = {
+    _id: user._id,
+    email: user.email,
+  };
 
-    if(!user._id) throw new Error("User ID is required for token generation");
+  const token = jwt.sign(payload, appConfig.secretKey, {
+    algorithm: "HS256",
+    expiresIn: "7d",
+  });
 
-    const payload = {
-        _id: user._id,
-        email: user.email
-    }
-
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        algorithm: 'HS256',
-        expiresIn: '7d'
-    })
-
-    return token
-}
+  return token;
+};

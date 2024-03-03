@@ -1,7 +1,7 @@
-import config from '../config';
+import appConfig from '../config';
 import { MongoClient, Db } from 'mongodb';
 
-const uri: string = config.mongoUri;
+const uri: string = appConfig.mongoUri;
 const client = new MongoClient(uri);
 let db: Db;
 

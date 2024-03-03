@@ -19,5 +19,5 @@ export interface credentials {
 }
 
 export interface preRequestJsonData {
-  userId: string
+  userId: string;
 }

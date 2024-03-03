@@ -35,23 +35,35 @@ export default class GridFsService {
   }
 
   async getFile(
-    FileId: string
+    fileId: string,
+    userId: string
   ): Promise<{ content: string; owner: string; mimeType: string }> {
     try {
+      if (!fileId) {
+        throw new errors.BadRequestError("Missing the mandatory fileId");
+      }
+
       const files = await this.bucket
-        .find({ _id: new ObjectId(FileId) })
+        .find({ _id: new ObjectId(fileId) })
         .toArray();
 
       if (files.length === 0) {
         throw new errors.NotFoundError("File not found.");
       }
 
-      const mimeType = files[0].metadata?.mimetype || "application/octet-stream";
-      
+      const mimeType =
+        files[0].metadata?.mimetype || "application/octet-stream";
+
       const owner = files[0].metadata?.userId;
 
+      if (owner !== userId) {
+        throw new errors.ForbiddenError(
+          "User does not have permission for this action"
+        );
+      }
+
       const downloadStream = this.bucket.openDownloadStream(
-        new ObjectId(FileId)
+        new ObjectId(fileId)
       );
       const chunks: Buffer[] = [];
 
@@ -75,6 +87,10 @@ export default class GridFsService {
         });
       });
     } catch (error) {
+      if (error instanceof errors.HttpError) {
+        throw error;
+      }
+
       throw new errors.NotFoundError("Error accessing file.");
     }
   }

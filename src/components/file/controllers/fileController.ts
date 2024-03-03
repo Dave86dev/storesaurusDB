@@ -15,6 +15,7 @@ export const uploadFile = async (
   gridFsService = new GridFsService(getDb());
 
   try {
+    //Exceptional error throw due to multer / GridFs nature
     if (!req.file) {
       throw new errors.BadRequestError("No file uploaded.");
     }
@@ -34,23 +35,10 @@ export const checkFile = async (
   gridFsService = new GridFsService(getDb());
 
   try {
-    const fileId = req.body.fileId;
-
-    if (!fileId) {
-      throw new errors.BadRequestError("Missing file Id");
-    }
-
-    const {
-      content: fileStream,
-      owner,
-      mimeType,
-    } = await gridFsService.getFile(fileId);
-
-    if (owner !== req.user._id) {
-      throw new errors.ForbiddenError(
-        "User does not have permission for this action"
-      );
-    }
+    const { content: fileStream, mimeType } = await gridFsService.getFile(
+      req.body.fileId,
+      req.user._id
+    );
 
     const AnalysisResults = await fileAnalysisService.analyzeFile(
       fileStream,
