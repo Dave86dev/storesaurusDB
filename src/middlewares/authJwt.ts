@@ -24,14 +24,30 @@ export const authJwt = (req: Request, res: Response, next: NextFunction) => {
     if (typeof decodedToken === "object" && decodedToken !== null) {
       req.user = decodedToken;
     } else {
-      return next(new errors.UnauthorizedError("Invalid token format"));
+      return next(
+        new errors.UnauthorizedError("Invalid or malformed token payload")
+      );
     }
     next();
   } catch (error) {
-    return next(
-      new errors.InternalServerError(
-        "An error occurred while processing the authentication token"
-      )
-    );
+
+    //PLAN A
+    return next(error)
+
+    //PLAN B
+
+    //restify
+    // if (error instanceof errors.HttpError) {
+    //   return next(error);
+    // }
+
+    // //JWT
+    // if (typeof error === "object" && error !== null && "name" in error) {
+    //   const name = (error as { name: string }).name;
+
+    //   if (name === "TokenExpiredError") {
+    //     return next(new errors.UnauthorizedError("Token expired"));
+    //   }
+    // }
   }
 };

@@ -15,6 +15,7 @@ export const uploadFile = async (
   gridFsService = new GridFsService(getDb());
 
   try {
+    //mhhhhhhhhhhhhhhhhhh
     if (!req.file) {
       throw new errors.BadRequestError("No file uploaded.");
     }
@@ -36,6 +37,7 @@ export const checkFile = async (
   try {
     const fileId = req.body.fileId;
 
+    //mhhhhhhhhhhhhhhh
     if (!fileId) {
       throw new errors.BadRequestError("Missing file Id");
     }
@@ -46,6 +48,7 @@ export const checkFile = async (
       mimeType,
     } = await gridFsService.getFile(fileId);
 
+    //mhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
     if (owner !== req.user._id) {
       throw new errors.ForbiddenError(
         "User does not have permission for this action"
