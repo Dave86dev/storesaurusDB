@@ -8,11 +8,10 @@ const fileFilter = (
   file: Express.Multer.File,
   cb: FileFilterCallback
 ) => {
-  
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    req.invalidFile = "Invalid file type";
+    req.invalidFile = "Invalid file type, only CSV allowed";
     cb(null, false);
   }
 };

@@ -1,4 +1,3 @@
-import * as errors from "restify-errors";
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/authServices";
 
