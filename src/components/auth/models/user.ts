@@ -4,8 +4,6 @@ export interface user {
     username: string
     email: string
     password: string
-    createdAt: Date
-    updatedAt: Date
 }
 
 export interface userDB {
