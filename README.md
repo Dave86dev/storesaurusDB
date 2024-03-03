@@ -57,7 +57,7 @@ git clone https://github.com/Dave86dev/storesaurusDB
 
 cd storesaurusDB
 
-npm i storesaurusDB
+npm i 
 
 npm run dev
 ```
