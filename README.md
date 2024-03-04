@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://i.ibb.co/wWCBkNR/saurus.png" alt="saurus" style="width: 200px; height: 200px;" border="0">
+    <img src="https://i.ibb.co/Wnp6Vg7/saurus.png" alt="saurus" style="width: 200px; height: 200px;" border="0">
 </p>
 
 
