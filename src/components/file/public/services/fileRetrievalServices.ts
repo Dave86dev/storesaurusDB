@@ -1,21 +1,14 @@
 import * as errors from "restify-errors";
-import { getDb } from "../../../db";
-import { serviceAnswer } from "../../../interfaces";
+import { getDb } from "../../../../db";
+import { serviceAnswer } from "../../../../interfaces";
 
 export class FileRetrievalService {
-  async searchUserFiles(
-    userId: string,
-    tokenId: string
-  ): Promise<serviceAnswer> {
+  async searchUserFiles(userId: string): Promise<serviceAnswer> {
     try {
       const db = getDb();
 
       if (!userId) {
         throw new errors.BadRequestError("Missing the mandatory userId");
-      }
-
-      if (userId !== tokenId) {
-        throw new errors.UnauthorizedError("Permission denied.");
       }
 
       const userFiles = await db

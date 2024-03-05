@@ -1,6 +1,6 @@
 import * as errors from "restify-errors";
 import * as Papa from "papaparse";
-import { csvAnalysis } from "../../../../interfaces";
+import { csvAnalysis } from "../../../../../interfaces";
 
 export const csvAnalysisHelper = async (
   csvContent: string

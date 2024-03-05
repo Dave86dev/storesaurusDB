@@ -1,10 +1,10 @@
 import * as errors from "restify-errors";
 import * as v from "valibot";
-import { user, userDB } from "../models/user";
-import { credentials, serviceAnswer } from "../../../interfaces";
-import { hashPassword, verifyPassword } from "../../../utils/passwordUtils";
-import { generateToken } from "../../../utils/generateToken";
-import { getDb } from "../../../db";
+import { user, userDB } from "../../models/user";
+import { credentials, serviceAnswer } from "../../../../interfaces";
+import { hashPassword, verifyPassword } from "../../../../utils/passwordUtils";
+import { generateToken } from "../../../../utils/generateToken";
+import { getDb } from "../../../../db";
 import {
   emailSchema,
   passwordSchema,
@@ -19,6 +19,9 @@ export class AuthService {
       v.parse(userNameSchema, newUser.username);
       v.parse(emailSchema, newUser.email);
       v.parse(passwordSchema, newUser.password);
+
+      newUser.role = "user";
+      newUser.isActive = true;
 
       newUser.password = await hashPassword(newUser.password);
 
