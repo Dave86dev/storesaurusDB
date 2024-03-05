@@ -3,7 +3,7 @@
 </p>
 
 
-# storesaurusDB
+# storesaurusdb
 
 <p>
   The backend for the Storesaurus project is designed to streamline your experience. By registering, you gain access to a platform where you can upload your .csv files and avail yourself of comprehensive analyses. Our system, as robust as a dinosaur, will identify any gaps and verify the accuracy of your data's "DNA". 
@@ -81,13 +81,14 @@ Version 0.4 04/03/2024
 
 ##### Authentication 
 
-- `POST /auth/register` - Register a new user.
 - `POST /auth/login` - Login an existing user.
+- `POST /auth/register` - Register a new user.
 
 ##### File
 
-- `POST /file/upload` - Upload a .csv file to the database for further analysis.
 - `POST /file/analysis` - Analyse and get a diagnosis in return.
+- `POST /file/retrieval` - Retrieve files uploaded by a certain user.
+- `POST /file/upload` - Upload a .csv file to the database for further analysis.
 
 </details>
 
