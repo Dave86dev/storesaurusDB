@@ -1,6 +1,6 @@
 import * as errors from "restify-errors";
 import { csvAnalysisHelper } from "./helpers/csvAnalysisHelper";
-import { serviceAnswer } from "../../../interfaces";
+import { serviceAnswer } from "../../../../interfaces";
 
 export class FileAnalysisService {
   async analyzeFile(file: string, mime: string): Promise<serviceAnswer> {

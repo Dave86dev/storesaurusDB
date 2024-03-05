@@ -1,13 +1,13 @@
 import * as errors from "restify-errors";
 import GridFsService from "../services/gridFsSservices";
 import { NextFunction, Request, Response } from "express";
-import { getDb } from "../../../db";
+import { getDb } from "../../../../db";
 import { FileAnalysisService } from "../services/fileAnalysisServices";
 import { FileRetrievalService } from "../services/fileRetrievalServices";
 
-let gridFsService: GridFsService;
-let fileAnalysisService = new FileAnalysisService();
-let fileRetrievalService = new FileRetrievalService();
+const gridFsServiceOn = new GridFsService(getDb());
+const fileAnalysisService = new FileAnalysisService();
+const fileRetrievalService = new FileRetrievalService();
 
 export const checkFile = async (
   req: Request,
@@ -15,8 +15,7 @@ export const checkFile = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    gridFsService = new GridFsService(getDb());
-    const result = await gridFsService.getFile(req.body.fileId, req.user._id);
+    const result = await gridFsServiceOn.getFile(req.body.fileId, req.user._id);
 
     const { content: fileStream, mimeType } = result.data;
 
@@ -34,6 +33,22 @@ export const checkFile = async (
   }
 };
 
+export const deleteUserFile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const result = await gridFsServiceOn.deleteFile(req.body.fileId);
+
+    res.status(200).json({
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const retrievalFiles = async (
   req: Request,
   res: Response,
@@ -41,7 +56,7 @@ export const retrievalFiles = async (
 ): Promise<void> => {
   try {
     const retrievalResults = await fileRetrievalService.searchUserFiles(
-      req.body.userId, req.user._id
+      req.user._id
     );
     res.status(200).json({
       message: retrievalResults.message,
@@ -58,13 +73,12 @@ export const uploadFile = async (
   next: NextFunction
 ) => {
   try {
-    gridFsService = new GridFsService(getDb());
     //Exceptional error throw due to multer / GridFs nature
     if (!req.file) {
       throw new errors.BadRequestError("No file uploaded.");
     }
 
-    const uploadAnswer = await gridFsService.saveFile(req.file, req.user._id);
+    const uploadAnswer = await gridFsServiceOn.saveFile(req.file, req.user._id);
     res
       .status(201)
       .json({ message: uploadAnswer.message, data: uploadAnswer.data });
