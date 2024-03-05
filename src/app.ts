@@ -1,7 +1,8 @@
 import express from "express";
 import appConfig from "../config";
-import authRoutes from "./components/auth/authRoutes";
+import authRoutes from "./components/auth/public/authRoutes";
 import fileRoutes from "./components/file/fileRoutes";
+import pAuthRotues from "./components/auth/private/pAuthRoutes";
 import { initDbConnection } from "./db";
 import { handleError } from "./middlewares/handleError";
 
@@ -12,6 +13,8 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/file", fileRoutes);
+
+app.use("/admin/auth", pAuthRotues);
 app.use(handleError);
 
 const startServer = async () => {

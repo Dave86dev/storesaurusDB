@@ -1,12 +1,14 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId } from "mongodb";
 
 export interface user {
-    username: string
-    email: string
-    password: string
+  username: string;
+  email: string;
+  password: string;
+  role : "admin" | "user";
+  isActive: boolean;
 }
 
 export interface userDB {
-    _id: string | ObjectId
-    email: string
+  _id: string | ObjectId;
+  email: string;
 }

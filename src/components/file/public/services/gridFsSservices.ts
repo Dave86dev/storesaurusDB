@@ -1,7 +1,7 @@
 import * as errors from "restify-errors";
 import { GridFSBucket, Db, ObjectId } from "mongodb";
 import { PassThrough } from "stream";
-import { fileData, serviceAnswer } from "../../../interfaces";
+import { fileData, serviceAnswer } from "../../../../interfaces";
 
 export default class GridFsService {
   private readonly bucket: GridFSBucket;
@@ -10,29 +10,18 @@ export default class GridFsService {
     this.bucket = new GridFSBucket(db, { bucketName: "uploads" });
   }
 
-  async saveFile(file: Express.Multer.File, userId: string): Promise<serviceAnswer> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        metadata: {
-          mimetype: file.mimetype,
-          userId: userId,
-        },
-      };
+  async deleteFile(fileId: string): Promise<serviceAnswer> {
+    try {
+      if (!fileId) {
+        throw new errors.BadRequestError("Missing the mandatory fileId.");
+      }
 
-      const uploadStream = this.bucket.openUploadStream(
-        file.originalname,
-        options
-      );
+      await this.bucket.delete(new ObjectId(fileId));
 
-      const bufferStream = new PassThrough();
-      bufferStream.end(file.buffer);
-      bufferStream
-        .pipe(uploadStream)
-        .on("error", (error) =>
-          reject(new errors.InternalServerError(error.message))
-        )
-        .on("finish", () => resolve({message: "File upload successfuly", data: uploadStream.id}));
-    });
+      return { message: "File successfully deleted" };
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getFile(fileId: string, userId: string): Promise<serviceAnswer> {
@@ -93,5 +82,35 @@ export default class GridFsService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async saveFile(
+    file: Express.Multer.File,
+    userId: string
+  ): Promise<serviceAnswer> {
+    return new Promise((resolve, reject) => {
+      const options = {
+        metadata: {
+          mimetype: file.mimetype,
+          userId: userId,
+        },
+      };
+
+      const uploadStream = this.bucket.openUploadStream(
+        file.originalname,
+        options
+      );
+
+      const bufferStream = new PassThrough();
+      bufferStream.end(file.buffer);
+      bufferStream
+        .pipe(uploadStream)
+        .on("error", (error) =>
+          reject(new errors.InternalServerError(error.message))
+        )
+        .on("finish", () =>
+          resolve({ message: "File upload successfuly", data: uploadStream.id })
+        );
+    });
   }
 }
