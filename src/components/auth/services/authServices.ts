@@ -1,17 +1,20 @@
 import * as errors from "restify-errors";
 import * as v from "valibot";
 import { user, userDB } from "../models/user";
-import { credentials } from "../../../interfaces";
+import { credentials, serviceAnswer } from "../../../interfaces";
 import { hashPassword, verifyPassword } from "../../../utils/passwordUtils";
 import { generateToken } from "../../../utils/generateToken";
 import { getDb } from "../../../db";
-import { emailSchema, passwordSchema, userNameSchema } from "./helpers/validateData";
+import {
+  emailSchema,
+  passwordSchema,
+  userNameSchema,
+} from "./helpers/validateData";
 
 export class AuthService {
-  async insertUser(newUser: user): Promise<void> {
-    const db = getDb();
-
+  async insertUser(newUser: user): Promise<serviceAnswer> {
     try {
+      const db = getDb();
       //I validate credentials with valibot ^^
       v.parse(userNameSchema, newUser.username);
       v.parse(emailSchema, newUser.email);
@@ -20,14 +23,17 @@ export class AuthService {
       newUser.password = await hashPassword(newUser.password);
 
       await db.collection("Users_Collection").insertOne(newUser);
-    } catch (error: unknown) {
 
+      return {
+        message: "User successfully registered",
+      };
+    } catch (error: unknown) {
       //duplicated e-mail attempt
       const dbError = error as { code?: number };
       if (dbError.code === 11000) {
         throw new errors.ConflictError("Email already registered");
       }
-      
+
       //valibot
       if (typeof error === "object" && error !== null && "issues" in error) {
         const validationError = error as { issues: [{ message: string }] };
@@ -35,13 +41,15 @@ export class AuthService {
           throw new errors.UnauthorizedError(validationError.issues[0].message);
         }
       }
+
+      //restify-errors
+      throw error;
     }
   }
 
-  async loginUser(credentials: credentials): Promise<any> {
-    const db = getDb();
-
+  async loginUser(credentials: credentials): Promise<serviceAnswer> {
     try {
+      const db = getDb();
       //I validate credentials with valibot ^^
       const email = v.parse(emailSchema, credentials.email);
       const password = v.parse(passwordSchema, credentials.password);
@@ -80,13 +88,9 @@ export class AuthService {
 
       return {
         message: "User authentication ok",
-        token: jwt,
+        data: jwt,
       };
     } catch (error: unknown) {
-      if (error instanceof errors.HttpError) {
-        throw error;
-      }
-
       //valibot
       if (typeof error === "object" && error !== null && "issues" in error) {
         const validationError = error as { issues: [{ message: string }] };
@@ -94,6 +98,9 @@ export class AuthService {
           throw new errors.UnauthorizedError(validationError.issues[0].message);
         }
       }
+
+      //restify-errors
+      throw error;
     }
   }
 }

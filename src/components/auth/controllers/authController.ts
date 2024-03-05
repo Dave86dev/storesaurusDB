@@ -3,19 +3,6 @@ import { AuthService } from "../services/authServices";
 
 const authService = new AuthService();
 
-export async function postRegister(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    await authService.insertUser(req.body);
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    next(error);
-  }
-}
-
 export async function postLogin(
   req: Request,
   res: Response,
@@ -25,8 +12,21 @@ export async function postLogin(
     const loginResponse = await authService.loginUser(req.body);
     res.status(200).json({
       message: loginResponse.message,
-      token: loginResponse.token,
+      data: loginResponse.data,
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function postRegister(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const insertResponse = await authService.insertUser(req.body);
+    res.status(201).json({ message: insertResponse.message });
   } catch (error) {
     next(error);
   }

@@ -8,9 +8,8 @@ declare module "express-serve-static-core" {
   }
 }
 
-export interface csvAnalysis {
-  rowIndex: number;
-  missingColumns: string[];
+export interface preRequestJsonData {
+  userId: string;
 }
 
 export interface credentials {
@@ -18,6 +17,18 @@ export interface credentials {
   password: string;
 }
 
-export interface preRequestJsonData {
-  userId: string;
+export interface csvAnalysis {
+  rowIndex: number;
+  missingColumns: string[];
+}
+
+export interface fileData {
+  content: string;
+  owner: string;
+  mimeType: string;
+}
+
+export interface serviceAnswer {
+  message?: string;
+  data?: any;
 }
