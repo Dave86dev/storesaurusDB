@@ -1,7 +1,7 @@
 import express from "express";
 import appConfig from "../config";
 import authRoutes from "./components/auth/public/authRoutes";
-import fileRoutes from "./components/file/fileRoutes";
+import fileRoutes from "./components/file/public/fileRoutes";
 import pAuthRotues from "./components/auth/private/pAuthRoutes";
 import { initDbConnection } from "./db";
 import { handleError } from "./middlewares/handleError";
