@@ -53,9 +53,9 @@ Get a copy of the project up and running on your local machine for development a
 Don't forget to copy and rename .env.example as .env with your corresponding values.
 
 ```sh
-git clone https://github.com/Dave86dev/storesaurusDB
+git clone https://github.com/Dave86dev/storesaurusdb
 
-cd storesaurusDB
+cd storesaurusdb
 
 npm i 
 
