@@ -1,6 +1,7 @@
 import * as errors from "restify-errors";
 import { GridFSBucket, Db, ObjectId } from "mongodb";
 import { PassThrough } from "stream";
+import { fileData, serviceAnswer } from "../../../interfaces";
 
 export default class GridFsService {
   private readonly bucket: GridFSBucket;
@@ -9,7 +10,7 @@ export default class GridFsService {
     this.bucket = new GridFSBucket(db, { bucketName: "uploads" });
   }
 
-  async saveFile(file: Express.Multer.File, userId: string): Promise<ObjectId> {
+  async saveFile(file: Express.Multer.File, userId: string): Promise<serviceAnswer> {
     return new Promise((resolve, reject) => {
       const options = {
         metadata: {
@@ -30,14 +31,11 @@ export default class GridFsService {
         .on("error", (error) =>
           reject(new errors.InternalServerError(error.message))
         )
-        .on("finish", () => resolve(uploadStream.id));
+        .on("finish", () => resolve({message: "File upload successfuly", data: uploadStream.id}));
     });
   }
 
-  async getFile(
-    fileId: string,
-    userId: string
-  ): Promise<{ content: string; owner: string; mimeType: string }> {
+  async getFile(fileId: string, userId: string): Promise<serviceAnswer> {
     try {
       if (!fileId) {
         throw new errors.BadRequestError("Missing the mandatory fileId");
@@ -82,16 +80,18 @@ export default class GridFsService {
           } else {
             const fileBuffer = Buffer.concat(chunks);
             const content = fileBuffer.toString("utf8");
-            resolve({ content, owner, mimeType });
+            resolve({
+              data: {
+                content: content,
+                owner: owner,
+                mimeType: mimeType,
+              } as fileData,
+            });
           }
         });
       });
     } catch (error) {
-      if (error instanceof errors.HttpError) {
-        throw error;
-      }
-
-      throw new errors.NotFoundError("Error accessing file.");
+      throw error;
     }
   }
 }

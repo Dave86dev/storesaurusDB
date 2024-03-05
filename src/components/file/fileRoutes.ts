@@ -2,9 +2,12 @@ import * as errors from "restify-errors";
 import express from "express";
 import upload from "./middlewares/multerConfig";
 import { authJwt } from "../../middlewares/authJwt";
-import { uploadFile, checkFile } from "./controllers/fileController";
+import { uploadFile, checkFile, retrievalFiles } from "./controllers/fileController";
 
 const router = express.Router();
+
+router.post('/analysis', authJwt, checkFile)
+router.post('/retrieval', authJwt, retrievalFiles)
 
 //Exceptional error-handling due to Multer non-compatibility with the way Express handles the errors.
 router.post("/upload", authJwt, upload.single("file"), (req, res, next) => {
@@ -14,6 +17,5 @@ router.post("/upload", authJwt, upload.single("file"), (req, res, next) => {
     next();
 }, uploadFile);
 
-router.post('/analysis', authJwt, checkFile)
 
 export default router;
