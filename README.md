@@ -42,9 +42,11 @@ Current version 0.4
 
 - **User Authentication:** Both registration and login processes are secure and thoroughly validated. 
 
-- **File Upload:** The ability to upload large .csv files through a controlled, error-proof process.
+- **File Management:** We can upload large .csv files through a controlled, error-proof process. We can also delete files and retrieve them given a user.
 
 - **File Analysis:** Choose a file you've uploaded to our database and explore it to obtain a diagnosis regarding empty data or structural deficiencies.
+
+- **Admin manager:** Deactivate users.
 
 ## Installation 
 
@@ -87,8 +89,18 @@ Version 0.4 04/03/2024
 ##### File
 
 - `POST /file/analysis` - Analyse and get a diagnosis in return.
+- `POST /file/delete`- Deletes a file from the database.
 - `POST /file/retrieval` - Retrieve files uploaded by a certain user.
 - `POST /file/upload` - Upload a .csv file to the database for further analysis.
+
+</details>
+
+<details>
+  <summary style="font-weight: bold; font-size: 1.3em;">Admin Endpoints</summary>
+
+##### Authentication 
+
+- `POST /admin/auth/deactivate` - Deactivate an existing user.
 
 </details>
 
