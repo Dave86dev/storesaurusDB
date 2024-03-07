@@ -4,14 +4,12 @@ import upload from "../middlewares/multerConfig";
 import { authJwt } from "../../../middlewares/authJwt";
 import {
   uploadFile,
-  checkFile,
   retrievalFiles,
   deleteUserFile
 } from "./controllers/fileController";
 
 const router = express.Router();
 
-router.post("/analysis", authJwt, checkFile);
 router.delete("/delete", authJwt, deleteUserFile);
 router.post("/retrieval", authJwt, retrievalFiles);
 
