@@ -15,7 +15,6 @@ export class AuthService {
   async insertUser(newUser: user): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      //I validate credentials with valibot ^^
       v.parse(userNameSchema, newUser.username);
       v.parse(emailSchema, newUser.email);
       v.parse(passwordSchema, newUser.password);
@@ -31,13 +30,11 @@ export class AuthService {
         message: "User successfully registered",
       };
     } catch (error: unknown) {
-      //duplicated e-mail attempt
       const dbError = error as { code?: number };
       if (dbError.code === 11000) {
         throw new errors.ConflictError("Email already registered");
       }
 
-      //valibot
       if (typeof error === "object" && error !== null && "issues" in error) {
         const validationError = error as { issues: [{ message: string }] };
         if (validationError.issues.length > 0) {
@@ -45,7 +42,6 @@ export class AuthService {
         }
       }
 
-      //restify-errors
       throw error;
     }
   }
@@ -53,7 +49,6 @@ export class AuthService {
   async loginUser(credentials: credentials): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      //I validate credentials with valibot ^^
       const email = v.parse(emailSchema, credentials.email);
       const password = v.parse(passwordSchema, credentials.password);
 
@@ -94,7 +89,6 @@ export class AuthService {
         data: jwt,
       };
     } catch (error: unknown) {
-      //valibot
       if (typeof error === "object" && error !== null && "issues" in error) {
         const validationError = error as { issues: [{ message: string }] };
         if (validationError.issues.length > 0) {
@@ -102,7 +96,6 @@ export class AuthService {
         }
       }
 
-      //restify-errors
       throw error;
     }
   }

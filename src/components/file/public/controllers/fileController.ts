@@ -1,38 +1,11 @@
 import * as errors from "restify-errors";
-import GridFsService from "../services/gridFsSservices";
+import GridFsService from "../../../../services/gridFsSservices";
 import { NextFunction, Request, Response } from "express";
 import { getDb } from "../../../../db";
-import { FileAnalysisService } from "../services/fileAnalysisServices";
 import { FileRetrievalService } from "../services/fileRetrievalServices";
 
 let gridFsService: GridFsService;
-let fileAnalysisService = new FileAnalysisService();
 let fileRetrievalService = new FileRetrievalService();
-
-export const checkFile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    gridFsService = new GridFsService(getDb());
-    const result = await gridFsService.getFile(req.body.fileId, req.user._id);
-
-    const { content: fileStream, mimeType } = result.data;
-
-    const analysisResults = await fileAnalysisService.analyzeFile(
-      fileStream,
-      mimeType
-    );
-
-    res.status(200).json({
-      message: analysisResults.message,
-      data: analysisResults.data,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 export const deleteUserFile = async (
   req: Request,
@@ -76,7 +49,6 @@ export const uploadFile = async (
 ) => {
   try {
     gridFsService = new GridFsService(getDb());
-    //Exceptional error throw due to multer / GridFs nature
     if (!req.file) {
       throw new errors.BadRequestError("No file uploaded.");
     }
