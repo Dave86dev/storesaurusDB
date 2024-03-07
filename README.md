@@ -40,11 +40,11 @@ Error management across the application is meticulously handled by restify-error
 
 Current version 0.4
 
-- **User Authentication:** Both registration and login processes are secure and thoroughly validated. 
+- **User Authentication:** Both registration and login processes are secure and thoroughly validated. Password reset is on the way ;-P
 
 - **File Management:** We can upload large .csv files through a controlled, error-proof process. We can also delete files and retrieve them given a user.
 
-- **File Analysis:** Choose a file you've uploaded to our database and explore it to obtain a diagnosis regarding empty data or structural deficiencies.
+- **File Analysis:** Choose a file you've uploaded to our database and explore it to obtain a diagnosis regarding empty data or structural deficiencies. Now you are able to store these analysis! Isn't it cool?
 
 - **Admin manager:** Deactivate users.
 
@@ -66,13 +66,13 @@ npm run dev
 
 ## Development
 
-The project, while still in the nascent stages of its backend development, is poised for significant enhancements. Notably, the roadmap includes the integration of advanced file management and a revamped user authentication experience, with features like password recovery on the horizon.
+The project, while still in the nascent stages of its backend development, is poised for significant enhancements. Notably, the roadmap includes the integration of advanced file management and a revamped user authentication experience, with features like password recovery being worked on as I am writing this.
 
 Concurrently, the planning phase for the frontend development is underway, with expectations set on crafting a user interface using React with TypeScript.
 
 ## API Endpoints 
 
-Version 0.4 04/03/2024
+Version 0.4 08/03/2024
 
 *(Upcoming swagger documentation for a complete documentation of the API endpoints).*
 
@@ -81,6 +81,11 @@ Version 0.4 04/03/2024
 <details>
   <summary style="font-weight: bold; font-size: 1.3em;">User Endpoints</summary>
 
+##### Analysis 
+
+- `POST /analysis/analyze` - Analyse and get a diagnosis in return.
+- `POST /analysis/save` - Keep your analysis stored on our database.
+
 ##### Authentication 
 
 - `POST /auth/login` - Login an existing user.
@@ -88,7 +93,6 @@ Version 0.4 04/03/2024
 
 ##### File
 
-- `POST /file/analysis` - Analyse and get a diagnosis in return.
 - `POST /file/delete`- Deletes a file from the database.
 - `POST /file/retrieval` - Retrieve files uploaded by a certain user.
 - `POST /file/upload` - Upload a .csv file to the database for further analysis.
