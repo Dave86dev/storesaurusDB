@@ -12,7 +12,7 @@ export class FileRetrievalService {
       }
 
       const userFiles = await db
-        .collection("uploads.files")
+        .collection("Uploads_Collection.files")
         .find({ "metadata.userId": userId })
         .toArray();
 

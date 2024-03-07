@@ -1,13 +1,13 @@
 import * as errors from "restify-errors";
 import { GridFSBucket, Db, ObjectId } from "mongodb";
 import { PassThrough } from "stream";
-import { fileData, serviceAnswer } from "../../../../interfaces";
+import { fileData, serviceAnswer } from "../interfaces";
 
 export default class GridFsService {
   private readonly bucket: GridFSBucket;
 
   constructor(db: Db) {
-    this.bucket = new GridFSBucket(db, { bucketName: "uploads" });
+    this.bucket = new GridFSBucket(db, { bucketName: "Uploads_Collection" });
   }
 
   async deleteFile(fileId: string): Promise<serviceAnswer> {
