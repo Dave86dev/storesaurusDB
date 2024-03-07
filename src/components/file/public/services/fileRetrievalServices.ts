@@ -25,7 +25,6 @@ export class FileRetrievalService {
         data: userFiles,
       };
     } catch (error) {
-      //restify-errors
       throw error;
     }
   }
