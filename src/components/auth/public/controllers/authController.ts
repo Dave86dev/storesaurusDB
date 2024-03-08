@@ -19,13 +19,30 @@ export async function userLogin(
   }
 }
 
+export async function preLogin(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const preRegisterResponse = await authService.preLoginEmail(
+      req.body.preEmail
+    );
+    res.status(200).json({ message: preRegisterResponse.message });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function preRegister(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const preRegisterResponse = await authService.preRegisterEmail(req.body.preEmail);
+    const preRegisterResponse = await authService.preRegisterEmail(
+      req.body.preEmail
+    );
     res.status(200).json({ message: preRegisterResponse.message });
   } catch (error) {
     next(error);
@@ -39,7 +56,9 @@ export async function userRegister(
 ) {
   try {
     const insertResponse = await authService.insertUser(req.body);
-    res.status(201).json({ message: insertResponse.message });
+    res
+      .status(201)
+      .json({ message: insertResponse.message, data: insertResponse.data });
   } catch (error) {
     next(error);
   }
