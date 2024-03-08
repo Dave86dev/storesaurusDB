@@ -3,7 +3,7 @@ import { AuthService } from "../services/authServices";
 
 const authService = new AuthService();
 
-export async function postLogin(
+export async function userLogin(
   req: Request,
   res: Response,
   next: NextFunction
@@ -19,7 +19,20 @@ export async function postLogin(
   }
 }
 
-export async function postRegister(
+export async function preRegister(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const preRegisterResponse = await authService.preRegisterEmail(req.body.preEmail);
+    res.status(200).json({ message: preRegisterResponse.message });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function userRegister(
   req: Request,
   res: Response,
   next: NextFunction

@@ -9,6 +9,11 @@
     "outDir": "dist",
     "types": ["node"],
     "lib": ["es2021"],
+    "typeRoots": ["./node_modules/@types", "./types"],
     "strict": true
-  }
+  },
+  "include": [
+    "src/**/*",
+    "types/**/*"
+  ]
 }

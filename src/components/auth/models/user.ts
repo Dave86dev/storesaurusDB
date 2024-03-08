@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 export interface user {
   username: string;
   email: string;
-  password: string;
+  // password: string;
   role : "admin" | "user";
   isActive: boolean;
 }
