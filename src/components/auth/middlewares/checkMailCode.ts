@@ -27,14 +27,15 @@ export const checkMailCode = async (
     }
 
     next();
-  } catch (error) {
+  } catch (error: unknown) {
     if (typeof error === "object" && error !== null && "issues" in error) {
       const validationError = error as { issues: [{ message: string }] };
       if (validationError.issues.length > 0) {
-        throw new errors.UnauthorizedError(validationError.issues[0].message);
+        console.log(validationError.issues[0].message)
+        return next( new errors.UnauthorizedError(validationError.issues[0].message));
       }
     }
 
-    throw error;
+    return next(error);
   }
 };

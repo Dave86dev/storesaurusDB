@@ -33,7 +33,7 @@ export const sendEmail = async (
     });
 
     return {
-      message: `An email was sent to ${email} for further registration.`,
+      message: `An email was sent to ${email}.`,
     };
   } catch (error) {
     throw error;
