@@ -14,7 +14,7 @@ export interface preRequestJsonData {
 
 export interface credentials {
   email: string;
-  password: string;
+  mailCode: string;
 }
 
 export interface csvAnalysis {

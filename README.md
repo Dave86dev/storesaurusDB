@@ -25,7 +25,7 @@ This project is a backend application currently in the early stages of developme
 
 Leveraging TypeScript in strict mode, the application integrates seamlessly with Express and Node.js to directly utilize the MongoDB driver. This approach eschews the use of an Object Document Mapper (ODM) like Mongoose, thereby optimizing performance.
 
-User authentication is managed through a combination of Valibot for validation, JWT for token management, and bcrypt for password hashing, ensuring secure and efficient user authentication.
+User authentication is a cornerstone of this application, secured through innovative magic link techniques. By integrating Valibot for precise validation, JWT for sophisticated token management, and Mailjet for reliable email interactions, the system guarantees secure, efficient, and user-friendly authentication. This combination ensures not only the security of user data but also provides a seamless authentication experience.
 
 For file management and analysis, the application utilizes GridFS for storage, Multer for file upload handling, and Papaparse for CSV parsing, offering robust solutions for handling large files and complex data processing.
 
@@ -38,13 +38,13 @@ Error management across the application is meticulously handled by restify-error
 
 ## Features
 
-Current version 0.4
+Current version 0.5
 
-- **User Authentication:** Both registration and login processes are secure and thoroughly validated. 
+- **User Authentication:** Both registration and login processes are secure and thoroughly validated. Magic link rules.
 
 - **File Management:** We can upload large .csv files through a controlled, error-proof process. We can also delete files and retrieve them given a user.
 
-- **File Analysis:** Choose a file you've uploaded to our database and explore it to obtain a diagnosis regarding empty data or structural deficiencies.
+- **File Analysis:** Choose a file you've uploaded to our database and explore it to obtain a diagnosis regarding empty data or structural deficiencies. Now you are able to store these analysis! Isn't it cool?
 
 - **Admin manager:** Deactivate users.
 
@@ -66,13 +66,13 @@ npm run dev
 
 ## Development
 
-The project, while still in the nascent stages of its backend development, is poised for significant enhancements. Notably, the roadmap includes the integration of advanced file management and a revamped user authentication experience, with features like password recovery on the horizon.
+While the project is currently in the early stages of backend development, it is on the brink of substantial advancements. A key feature on the roadmap is the integration of advanced file management capabilities, promising to significantly enhance the application's functionality. The successful implementation of an email/magic link system marks a major milestone.
 
-Concurrently, the planning phase for the frontend development is underway, with expectations set on crafting a user interface using React with TypeScript.
+Concurrently, the planning phase for the frontend development is underway, with expectations set on crafting a user interface with React-Vite-TypeScript.
 
 ## API Endpoints 
 
-Version 0.4 04/03/2024
+Version 0.5 09/03/2024
 
 *(Upcoming swagger documentation for a complete documentation of the API endpoints).*
 
@@ -81,14 +81,21 @@ Version 0.4 04/03/2024
 <details>
   <summary style="font-weight: bold; font-size: 1.3em;">User Endpoints</summary>
 
+##### Analysis 
+
+- `POST /analysis/analyze` - Analyse and get a diagnosis in return.
+- `POST /analysis/save` - Keep your analysis stored on our database.
+
 ##### Authentication 
 
-- `POST /auth/login` - Login an existing user.
-- `POST /auth/register` - Register a new user.
+- `POST /auth/prelogin` - First step to log an existing user.
+- `POST /auth/login` - Second and final step to log an existing user.
+- `POST /auth/preregister` - First step to register a new user.
+- `POST /auth/register` - Second step in the process of registering a new user.
+- `POST /auth/registerfinal` - Final step in registering a new user.
 
 ##### File
 
-- `POST /file/analysis` - Analyse and get a diagnosis in return.
 - `POST /file/delete`- Deletes a file from the database.
 - `POST /file/retrieval` - Retrieve files uploaded by a certain user.
 - `POST /file/upload` - Upload a .csv file to the database for further analysis.

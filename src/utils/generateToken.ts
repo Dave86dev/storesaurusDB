@@ -10,7 +10,7 @@ export const generateToken = (user: userDB): string => {
 
   const token = jwt.sign(payload, appConfig.secretKey, {
     algorithm: "HS256",
-    expiresIn: "7d",
+    expiresIn: "15d",
   });
 
   return token;

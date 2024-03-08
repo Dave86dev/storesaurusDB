@@ -23,7 +23,12 @@ const setupIndexes = async () => {
     await db
       .collection("Analysis_Collection")
       .createIndex({ fileId: 1, userId: 1 }, { unique: false });
-    console.log("Indexes for Analysis collection created successfully");
+
+    db.collection("PreTokens_Collection").createIndex(
+      { createdAt: 1 },
+      { expireAfterSeconds: 600 }
+    );
+    console.log("Indexes created successfully");
   } catch (error) {
     console.error("Error creating indexes:", error);
   }
