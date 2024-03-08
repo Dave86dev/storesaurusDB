@@ -1,9 +1,13 @@
 import express from 'express';
-import { postRegister, postLogin } from './controllers/authController'
+import { userLogin, preLogin, preRegister, userRegister, userRegisterFinal } from './controllers/authController'
+import { checkMailCode } from '../middlewares/checkMailCode';
 
 const router = express.Router();
 
-router.post('/login', postLogin);
-router.post('/register', postRegister);
+router.post('/login', checkMailCode, userLogin);
+router.post('/prelogin', preLogin);
+router.post('/preregister', preRegister);
+router.post('/register', checkMailCode, userRegister);
+router.post('/registerfinal', userRegisterFinal);
 
 export default router;
