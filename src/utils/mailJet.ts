@@ -27,7 +27,7 @@ export const sendEmail = async (
           ],
           Subject: "Your storesaurus registry code",
           TextPart: `Here is your activation code: ${token}`,
-          HTMLPart: `<h3>Here is your activation code: ${token}</h3>`,
+          HTMLPart: `<h3>Here is your activation code: </h3>${token}`,
         },
       ],
     });

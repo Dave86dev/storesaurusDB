@@ -55,6 +55,20 @@ export async function userRegister(
   next: NextFunction
 ) {
   try {
+    res
+      .status(200)
+      .json({ message: `Code provided for ${req.body.email} authentication succesful`, data: req.body.email });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function userRegisterFinal(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
     const insertResponse = await authService.insertUser(req.body);
     res
       .status(201)

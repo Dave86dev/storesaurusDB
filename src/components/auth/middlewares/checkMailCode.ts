@@ -1,6 +1,11 @@
 import * as errors from "restify-errors";
+import * as v from "valibot";
 import { Request, Response, NextFunction } from "express";
 import { getDb } from "../../../db";
+import {
+  codeSchema,
+  emailSchema,
+} from "../public/services/helpers/validateData";
 
 export const checkMailCode = async (
   req: Request,
@@ -9,10 +14,12 @@ export const checkMailCode = async (
 ) => {
   try {
     const db = getDb();
+    const email = v.parse(emailSchema, req.body.email);
+    const token = v.parse(codeSchema, req.body.token);
 
     const verifiedUser = await db.collection("PreTokens_Collection").findOne({
-      email: req.body.email,
-      token: req.body.mailCode,
+      email: email,
+      token: token,
     });
 
     if (!verifiedUser) {
@@ -21,6 +28,13 @@ export const checkMailCode = async (
 
     next();
   } catch (error) {
+    if (typeof error === "object" && error !== null && "issues" in error) {
+      const validationError = error as { issues: [{ message: string }] };
+      if (validationError.issues.length > 0) {
+        throw new errors.UnauthorizedError(validationError.issues[0].message);
+      }
+    }
+
     throw error;
   }
 };

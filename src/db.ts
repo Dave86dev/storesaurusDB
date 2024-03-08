@@ -26,7 +26,7 @@ const setupIndexes = async () => {
 
     db.collection("PreTokens_Collection").createIndex(
       { createdAt: 1 },
-      { expireAfterSeconds: 900 }
+      { expireAfterSeconds: 600 }
     );
     console.log("Indexes created successfully");
   } catch (error) {

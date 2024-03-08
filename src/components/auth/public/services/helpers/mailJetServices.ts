@@ -1,9 +1,7 @@
-// import * as errors from "restify-errors";
 import { v4 as uuidv4 } from "uuid";
 import { getDb } from "../../../../../db";
 import { sendEmail } from "../../../../../utils/mailJet";
 import { serviceAnswer } from "../../../../../interfaces";
-// import { credentials } from "../../../../../interfaces";
 
 export class MailJetService {
   async sendMailCode(email: string): Promise<serviceAnswer> {
@@ -27,6 +25,4 @@ export class MailJetService {
       throw error;
     }
   }
-
-  
 }
