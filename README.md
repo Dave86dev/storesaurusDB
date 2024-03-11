@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://i.ibb.co/Wnp6Vg7/saurus.png" alt="saurus" style="width: 200px; height: 200px;" border="0">
+    <img src="https://i.ibb.co/Wnp6Vg7/saurus.png" alt="saurus" style="width: 250px; height: 250px;" border="0">
 </p>
 
 
@@ -40,13 +40,13 @@ Error management across the application is meticulously handled by restify-error
 
 Current version 0.5
 
-- **User Authentication:** Both registration and login processes are secure and thoroughly validated. Magic link rules.
+- **User Authentication:** Both registration and login processes are secure and thoroughly validated. Magic link rules. User can ask for it's account deactivation.
 
 - **File Management:** We can upload large .csv files through a controlled, error-proof process. We can also delete files and retrieve them given a user.
 
 - **File Analysis:** Choose a file you've uploaded to our database and explore it to obtain a diagnosis regarding empty data or structural deficiencies. Now you are able to store these analysis! Isn't it cool?
 
-- **Admin manager:** Deactivate users.
+- **Admin manager:** Toggle user isActive accounts.
 
 ## Installation 
 
@@ -72,7 +72,7 @@ Concurrently, the planning phase for the frontend development is underway, with 
 
 ## API Endpoints 
 
-Version 0.5 09/03/2024
+Version 0.5 11/03/2024
 
 *(Upcoming swagger documentation for a complete documentation of the API endpoints).*
 
@@ -88,6 +88,7 @@ Version 0.5 09/03/2024
 
 ##### Authentication 
 
+- `POST /auth/deactivate` - Ask administration to deactivate your account.
 - `POST /auth/prelogin` - First step to log an existing user.
 - `POST /auth/login` - Second and final step to log an existing user.
 - `POST /auth/preregister` - First step to register a new user.
@@ -107,7 +108,7 @@ Version 0.5 09/03/2024
 
 ##### Authentication 
 
-- `POST /admin/auth/deactivate` - Deactivate an existing user.
+- `POST /admin/auth/toggle` - Toggle activation and deactivation of a certain user.
 
 </details>
 
