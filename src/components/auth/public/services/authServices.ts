@@ -10,6 +10,25 @@ import { MailJetService } from "./helpers/mailJetServices";
 const mailJetService = new MailJetService();
 
 export class AuthService {
+  async askForDeactivation(email: string): Promise<serviceAnswer> {
+    try {
+      let sendResponse = await mailJetService.sendMailDeactivation(email);
+
+      return {
+        message: sendResponse.message,
+      };
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "issues" in error) {
+        const validationError = error as { issues: [{ message: string }] };
+        if (validationError.issues.length > 0) {
+          throw new errors.UnauthorizedError(validationError.issues[0].message);
+        }
+      }
+
+      throw error;
+    }
+  }
+
   async insertUser(newUser: user): Promise<serviceAnswer> {
     try {
       const db = getDb();

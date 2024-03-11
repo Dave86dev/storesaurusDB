@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { getDb } from "../../../../../db";
-import { sendEmail } from "../../../../../utils/mailJet";
+import { deactivateEmail, sendEmail } from "../../../../../utils/mailJet";
 import { serviceAnswer } from "../../../../../interfaces";
 
 export class MailJetService {
@@ -17,6 +17,18 @@ export class MailJetService {
       });
 
       const sendingAnswer = await sendEmail(email, token);
+
+      return {
+        message: sendingAnswer.message,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async sendMailDeactivation(email: string): Promise<serviceAnswer> {
+    try {
+      const sendingAnswer = await deactivateEmail(email);
 
       return {
         message: sendingAnswer.message,
