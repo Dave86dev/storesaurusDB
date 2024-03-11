@@ -3,14 +3,14 @@ import { pAuthService } from "../services/pAuthServices";
 
 const authService = new pAuthService();
 
-export async function deactivateU(
+export async function toggleActivation(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const deactivateResponse = await authService.deactivateUser(req.body.id);
-    res.status(200).json({ message: deactivateResponse.message });
+    const toggleResponse = await authService.toggleUserActivation(req.body.id);
+    res.status(200).json({ message: toggleResponse.message });
   } catch (error) {
     next(error);
   }

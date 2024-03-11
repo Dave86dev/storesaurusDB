@@ -1,11 +1,10 @@
 import express from "express";
 import { authJwt } from "../../../middlewares/authJwt";
-import { isActive } from "../../../middlewares/isActive";
 import { isAdmin } from "../../../middlewares/isAdmin";
-import { deactivateU } from "./controllers/pAuthController";
+import { toggleActivation } from "./controllers/pAuthController";
 
 const router = express.Router();
 
-router.delete("/deactivate", authJwt, isActive, isAdmin, deactivateU)
+router.delete("/toggle", authJwt, isAdmin, toggleActivation)
 
 export default router;

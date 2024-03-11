@@ -3,16 +3,18 @@ import { AuthService } from "../services/authServices";
 
 const authService = new AuthService();
 
-export async function userLogin(
+export async function askDeactivation(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const loginResponse = await authService.loginUser(req.body);
+    const deactivationResponse = await authService.askForDeactivation(
+      req.user.email
+    );
     res.status(200).json({
-      message: loginResponse.message,
-      data: loginResponse.data,
+      message: deactivationResponse.message,
+      data: deactivationResponse.data,
     });
   } catch (error) {
     next(error);
@@ -49,15 +51,32 @@ export async function preRegister(
   }
 }
 
+export async function userLogin(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const loginResponse = await authService.loginUser(req.body);
+    res.status(200).json({
+      message: loginResponse.message,
+      data: loginResponse.data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function userRegister(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    res
-      .status(200)
-      .json({ message: `Code provided for ${req.body.email} authentication succesful`, data: req.body.email });
+    res.status(200).json({
+      message: `Code provided for ${req.body.email} authentication succesful`,
+      data: req.body.email,
+    });
   } catch (error) {
     next(error);
   }
