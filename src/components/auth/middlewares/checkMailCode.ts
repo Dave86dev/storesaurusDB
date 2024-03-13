@@ -2,10 +2,7 @@ import * as errors from "restify-errors";
 import * as v from "valibot";
 import { Request, Response, NextFunction } from "express";
 import { getDb } from "../../../db";
-import {
-  codeSchema,
-  emailSchema,
-} from "../public/services/helpers/validateData";
+import { codeSchema, emailSchema } from "../services/helpers/validateData";
 
 export const checkMailCode = async (
   req: Request,

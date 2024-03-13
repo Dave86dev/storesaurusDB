@@ -1,7 +1,7 @@
 import * as errors from "restify-errors";
-import { getDb } from "../../../../db";
-import { serviceAnswer } from "../../../../interfaces";
-
+import { getDb } from "../../../db";
+import { serviceAnswer
+ } from "../../../interfaces";
 export class FileRetrievalService {
   async searchUserFiles(userId: string): Promise<serviceAnswer> {
     try {

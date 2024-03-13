@@ -1,18 +1,19 @@
 import * as errors from "restify-errors";
 import * as v from "valibot";
-import { user, userDB } from "../../models/user";
-import { credentials, serviceAnswer } from "../../../../interfaces";
-import { generateToken } from "../../../../utils/generateToken";
-import { getDb } from "../../../../db";
+import { user, userDB } from "../models/user";
+import { serviceAnswer, bodyReq, userReq } from "../../../interfaces";
+import { generateToken } from "../../../utils/generateToken";
+import { getDb } from "../../../db";
 import { emailSchema, userNameSchema } from "./helpers/validateData";
 import { MailJetService } from "./helpers/mailJetServices";
+import { ObjectId } from "mongodb";
 
 const mailJetService = new MailJetService();
 
 export class AuthService {
-  async askForDeactivation(email: string): Promise<serviceAnswer> {
+  async askForDeactivation(user: userReq): Promise<serviceAnswer> {
     try {
-      let sendResponse = await mailJetService.sendMailDeactivation(email);
+      let sendResponse = await mailJetService.sendMailDeactivation(user._id);
 
       return {
         message: sendResponse.message,
@@ -29,20 +30,22 @@ export class AuthService {
     }
   }
 
-  async insertUser(newUser: user): Promise<serviceAnswer> {
+  async insertUser(body: user): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      v.parse(userNameSchema, newUser.username);
-      v.parse(emailSchema, newUser.email);
+      v.parse(userNameSchema, body.username);
+      v.parse(emailSchema, body.email);
 
-      newUser.role = "user";
-      newUser.isActive = true;
+      body.role = "user";
+      body.isActive = true;
 
-      let user = await db.collection("Users_Collection").insertOne(newUser);
+      let user = await db.collection("Users_Collection").insertOne(body);
 
       const userForToken: userDB = {
         _id: user.insertedId,
-        email: newUser.email,
+        email: body.email,
+        role: body.role,
+        isActive: body.isActive,
       };
 
       const jwt = generateToken(userForToken);
@@ -63,10 +66,10 @@ export class AuthService {
     }
   }
 
-  async loginUser(credentials: credentials): Promise<serviceAnswer> {
+  async loginUser(body: bodyReq): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      const email = v.parse(emailSchema, credentials.email);
+      const email = v.parse(emailSchema, body.email);
 
       const user = await db.collection("Users_Collection").findOne({
         email: email,
@@ -79,6 +82,8 @@ export class AuthService {
       const userForToken: userDB = {
         _id: user._id,
         email: user.email,
+        role: user.role,
+        isActive: user.isActive,
       };
 
       const jwt = generateToken(userForToken);
@@ -99,10 +104,10 @@ export class AuthService {
     }
   }
 
-  async preLoginEmail(preEmail: string): Promise<serviceAnswer> {
+  async preLoginEmail(body: bodyReq): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      const email = v.parse(emailSchema, preEmail);
+      const email = v.parse(emailSchema, body.preEmail);
 
       const user = await db.collection("Users_Collection").findOne({
         email: email,
@@ -129,11 +134,11 @@ export class AuthService {
     }
   }
 
-  async preRegisterEmail(preEmail: string): Promise<serviceAnswer> {
+  async preRegisterEmail(body: bodyReq): Promise<serviceAnswer> {
     try {
       const db = getDb();
 
-      const email = v.parse(emailSchema, preEmail);
+      const email = v.parse(emailSchema, body.preEmail);
 
       const user = await db.collection("Users_Collection").findOne({
         email: email,
@@ -158,5 +163,49 @@ export class AuthService {
 
       throw error;
     }
+  }
+
+  async toggleUserActivation(userId: string): Promise<serviceAnswer> {
+    try {
+      const db = getDb();
+
+      if (!userId) {
+        throw new errors.BadRequestError("Invalid or missing userId.");
+      }
+
+      const user = await db
+        .collection("Users_Collection")
+        .findOne({ _id: new ObjectId(userId) });
+
+      if (!user) {
+        throw new errors.NotFoundError("User not found.");
+      }
+
+      const newIsActiveStatus = !user.isActive;
+
+      const result = await db
+        .collection("Users_Collection")
+        .updateOne(
+          { _id: new ObjectId(userId) },
+          { $set: { isActive: newIsActiveStatus } }
+        );
+
+      if (result.matchedCount === 0) {
+        throw new errors.NotFoundError("User not found.");
+      }
+
+      return {
+        message: `User activation status successfully toggled to ${newIsActiveStatus}.`,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async userRegister(body: bodyReq) {
+    return {
+      message: `Code provided for ${body.email} authentication succesful`,
+      data: body.email,
+    };
   }
 }

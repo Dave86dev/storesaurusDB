@@ -30,24 +30,16 @@ export const authJwt = (req: Request, res: Response, next: NextFunction) => {
     }
     next();
   } catch (error) {
+    if (error instanceof errors.HttpError) {
+      return next(error);
+    }
 
-    //PLAN A
-    return next(error)
+    if (typeof error === "object" && error !== null && "name" in error) {
+      const name = (error as { name: string }).name;
 
-    //PLAN B
-
-    //restify
-    // if (error instanceof errors.HttpError) {
-    //   return next(error);
-    // }
-
-    // //JWT
-    // if (typeof error === "object" && error !== null && "name" in error) {
-    //   const name = (error as { name: string }).name;
-
-    //   if (name === "TokenExpiredError") {
-    //     return next(new errors.UnauthorizedError("Token expired"));
-    //   }
-    // }
+      if (name === "TokenExpiredError") {
+        return next(new errors.UnauthorizedError("Token expired"));
+      }
+    }
   }
 };

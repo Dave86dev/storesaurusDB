@@ -6,6 +6,8 @@ export const generateToken = (user: userDB): string => {
   const payload = {
     _id: user._id,
     email: user.email,
+    role: user.role,
+    isActive: user.isActive
   };
 
   const token = jwt.sign(payload, appConfig.secretKey, {

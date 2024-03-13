@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import { getDb } from "../../../../../db";
-import { deactivateEmail, sendEmail } from "../../../../../utils/mailJet";
-import { serviceAnswer } from "../../../../../interfaces";
+import { getDb } from "../../../../db";
+import { deactivateEmail, sendEmail } from "../../../../utils/mailJet";
+import { serviceAnswer } from "../../../../interfaces";
 
 export class MailJetService {
   async sendMailCode(email: string): Promise<serviceAnswer> {
