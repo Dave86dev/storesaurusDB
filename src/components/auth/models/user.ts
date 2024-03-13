@@ -10,4 +10,6 @@ export interface user {
 export interface userDB {
   _id: string | ObjectId;
   email: string;
+  role : "admin" | "user";
+  isActive: boolean;
 }

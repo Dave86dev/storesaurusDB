@@ -1,20 +1,19 @@
 import * as errors from "restify-errors";
 import * as v from "valibot";
 import { user, userDB } from "../models/user";
-import { credentials, serviceAnswer } from "../../../interfaces";
+import { serviceAnswer, bodyReq, userReq } from "../../../interfaces";
 import { generateToken } from "../../../utils/generateToken";
 import { getDb } from "../../../db";
 import { emailSchema, userNameSchema } from "./helpers/validateData";
 import { MailJetService } from "./helpers/mailJetServices";
 import { ObjectId } from "mongodb";
-import { Request, Response, NextFunction } from "express";
 
 const mailJetService = new MailJetService();
 
 export class AuthService {
-  async askForDeactivation(email: string): Promise<serviceAnswer> {
+  async askForDeactivation(user: userReq): Promise<serviceAnswer> {
     try {
-      let sendResponse = await mailJetService.sendMailDeactivation(email);
+      let sendResponse = await mailJetService.sendMailDeactivation(user._id);
 
       return {
         message: sendResponse.message,
@@ -31,20 +30,22 @@ export class AuthService {
     }
   }
 
-  async insertUser(newUser: user): Promise<serviceAnswer> {
+  async insertUser(body: user): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      v.parse(userNameSchema, newUser.username);
-      v.parse(emailSchema, newUser.email);
+      v.parse(userNameSchema, body.username);
+      v.parse(emailSchema, body.email);
 
-      newUser.role = "user";
-      newUser.isActive = true;
+      body.role = "user";
+      body.isActive = true;
 
-      let user = await db.collection("Users_Collection").insertOne(newUser);
+      let user = await db.collection("Users_Collection").insertOne(body);
 
       const userForToken: userDB = {
         _id: user.insertedId,
-        email: newUser.email,
+        email: body.email,
+        role: body.role,
+        isActive: body.isActive,
       };
 
       const jwt = generateToken(userForToken);
@@ -65,10 +66,10 @@ export class AuthService {
     }
   }
 
-  async loginUser(credentials: credentials): Promise<serviceAnswer> {
+  async loginUser(body: bodyReq): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      const email = v.parse(emailSchema, credentials.email);
+      const email = v.parse(emailSchema, body.email);
 
       const user = await db.collection("Users_Collection").findOne({
         email: email,
@@ -81,6 +82,8 @@ export class AuthService {
       const userForToken: userDB = {
         _id: user._id,
         email: user.email,
+        role: user.role,
+        isActive: user.isActive,
       };
 
       const jwt = generateToken(userForToken);
@@ -101,10 +104,10 @@ export class AuthService {
     }
   }
 
-  async preLoginEmail(preEmail: string): Promise<serviceAnswer> {
+  async preLoginEmail(body: bodyReq): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      const email = v.parse(emailSchema, preEmail);
+      const email = v.parse(emailSchema, body.preEmail);
 
       const user = await db.collection("Users_Collection").findOne({
         email: email,
@@ -131,11 +134,11 @@ export class AuthService {
     }
   }
 
-  async preRegisterEmail(preEmail: string): Promise<serviceAnswer> {
+  async preRegisterEmail(body: bodyReq): Promise<serviceAnswer> {
     try {
       const db = getDb();
 
-      const email = v.parse(emailSchema, preEmail);
+      const email = v.parse(emailSchema, body.preEmail);
 
       const user = await db.collection("Users_Collection").findOne({
         email: email,
@@ -199,14 +202,10 @@ export class AuthService {
     }
   }
 
-  async userRegister(req: Request, res: Response, next: NextFunction) {
-    try {
-      res.status(200).json({
-        message: `Code provided for ${req.body.email} authentication succesful`,
-        data: req.body.email,
-      });
-    } catch (error) {
-      next(error);
-    }
+  async userRegister(body: bodyReq) {
+    return {
+      message: `Code provided for ${body.email} authentication succesful`,
+      data: body.email,
+    };
   }
 }
