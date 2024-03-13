@@ -39,6 +39,7 @@ export interface bodyReq {
   token?: string
   userId?: string
   fileId?: string
+  analysisData: any
 }
 
 export interface userReq {
