@@ -154,16 +154,16 @@ export class AuthService {
     }
   }
 
-  async toggleUserActivation(userId: string): Promise<serviceAnswer> {
+  async toggleUserActivation(body: bodyReq): Promise<serviceAnswer> {
     const db = getDb();
 
-    if (!userId) {
+    if (!body.userId) {
       throw new errors.BadRequestError("Invalid or missing userId.");
     }
 
     const user = await db
       .collection("Users_Collection")
-      .findOne({ _id: new ObjectId(userId) });
+      .findOne({ _id: new ObjectId(body.userId) });
 
     if (!user) {
       throw new errors.NotFoundError("User not found.");
@@ -174,7 +174,7 @@ export class AuthService {
     const result = await db
       .collection("Users_Collection")
       .updateOne(
-        { _id: new ObjectId(userId) },
+        { _id: new ObjectId(body.userId) },
         { $set: { isActive: newIsActiveStatus } }
       );
 

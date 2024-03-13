@@ -1,17 +1,17 @@
 import * as errors from "restify-errors";
 import { getDb } from "../../../db";
-import { serviceAnswer } from "../../../interfaces";
+import { serviceAnswer, userReq } from "../../../interfaces";
 export class FileRetrievalService {
-  async searchUserFiles(userId: string): Promise<serviceAnswer> {
+  async searchUserFiles(user: userReq): Promise<serviceAnswer> {
     const db = getDb();
 
-    if (!userId) {
+    if (!user._id) {
       throw new errors.BadRequestError("Missing the mandatory userId");
     }
 
     const userFiles = await db
       .collection("Uploads_Collection.files")
-      .find({ "metadata.userId": userId })
+      .find({ "metadata.userId": user._id })
       .toArray();
 
     if (!userFiles || userFiles.length === 0) {

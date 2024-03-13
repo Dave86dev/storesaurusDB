@@ -37,6 +37,9 @@ export interface bodyReq {
   preEmail? : string
   email?: string
   token?: string
+  userId?: string
+  fileId?: string
+  analysisData: any
 }
 
 export interface userReq {
