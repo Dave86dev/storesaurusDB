@@ -11,7 +11,7 @@ export default class GridFsService {
   }
 
   async deleteFile(fileId: string): Promise<serviceAnswer> {
-    try {
+    
       if (!fileId) {
         throw new errors.BadRequestError("Missing the mandatory fileId.");
       }
@@ -19,13 +19,11 @@ export default class GridFsService {
       await this.bucket.delete(new ObjectId(fileId));
 
       return { message: "File successfully deleted" };
-    } catch (error) {
-      throw error;
-    }
+    
   }
 
   async getFile(fileId: string, userId: string): Promise<serviceAnswer> {
-    try {
+    
       if (!fileId) {
         throw new errors.BadRequestError("Missing the mandatory fileId");
       }
@@ -79,9 +77,7 @@ export default class GridFsService {
           }
         });
       });
-    } catch (error) {
-      throw error;
-    }
+    
   }
 
   async saveFile(
