@@ -10,7 +10,7 @@ export default class GridFsService {
     this.bucket = new GridFSBucket(db, { bucketName: "Uploads_Collection" });
   }
 
-  async deleteFile(fileId: string): Promise<serviceAnswer> {
+  async deleteFile(fileId: string | undefined): Promise<serviceAnswer> {
     
       if (!fileId) {
         throw new errors.BadRequestError("Missing the mandatory fileId.");
