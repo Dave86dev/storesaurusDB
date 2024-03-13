@@ -2,18 +2,16 @@ import * as errors from "restify-errors";
 import express from "express";
 import upload from "./middlewares/multerConfig";
 import { authJwt } from "../../middlewares/authJwt";
-import {
-  uploadFile,
-  deleteUserFile
-} from "./controllers/fileController";
 import { generator } from "../../middlewares/generator";
 import { FileRetrievalService } from "./services/fileRetrievalServices";
+import { FileManagementServices } from "./services/fileManagementServices";
 
 const fileRetrievalService = new FileRetrievalService();
+const fileManagementServices = new FileManagementServices();
 
 const router = express.Router();
 
-router.delete("/delete", authJwt, deleteUserFile);
+router.delete("/delete", authJwt, generator(fileManagementServices.deleteUserFile, ["user"]));
 router.post("/retrieval", authJwt, generator(fileRetrievalService.searchUserFiles, ["user"]));
 router.post(
   "/upload",
@@ -25,7 +23,7 @@ router.post(
     }
     next();
   },
-  uploadFile
+  generator(fileManagementServices.uploadFile, ["file", "user"])
 );
 
 export default router;

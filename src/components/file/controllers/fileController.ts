@@ -2,10 +2,8 @@ import * as errors from "restify-errors";
 import GridFsService from "../../../services/gridFsSservices";
 import { NextFunction, Request, Response } from "express";
 import { getDb } from "../../../db";
-import { FileRetrievalService } from "../services/fileRetrievalServices";
 
 let gridFsService: GridFsService;
-let fileRetrievalService = new FileRetrievalService();
 
 export const deleteUserFile = async (
   req: Request,
@@ -18,24 +16,6 @@ export const deleteUserFile = async (
 
     res.status(200).json({
       message: result.message,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const retrievalFiles = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const retrievalResults = await fileRetrievalService.searchUserFiles(
-      req.user._id
-    );
-    res.status(200).json({
-      message: retrievalResults.message,
-      data: retrievalResults.data,
     });
   } catch (error) {
     next(error);
