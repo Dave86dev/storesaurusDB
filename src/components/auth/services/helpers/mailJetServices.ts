@@ -5,36 +5,28 @@ import { serviceAnswer } from "../../../../interfaces";
 
 export class MailJetService {
   async sendMailCode(email: string): Promise<serviceAnswer> {
-    try {
-      const db = getDb();
+    const db = getDb();
 
-      const token = uuidv4();
+    const token = uuidv4();
 
-      await db.collection("PreTokens_Collection").insertOne({
-        email: email,
-        token: token,
-        createdAt: new Date(),
-      });
+    await db.collection("PreTokens_Collection").insertOne({
+      email: email,
+      token: token,
+      createdAt: new Date(),
+    });
 
-      const sendingAnswer = await sendEmail(email, token);
+    const sendingAnswer = await sendEmail(email, token);
 
-      return {
-        message: sendingAnswer.message,
-      };
-    } catch (error) {
-      throw error;
-    }
+    return {
+      message: sendingAnswer.message,
+    };
   }
 
   async sendMailDeactivation(email: string): Promise<serviceAnswer> {
-    try {
-      const sendingAnswer = await deactivateEmail(email);
+    const sendingAnswer = await deactivateEmail(email);
 
-      return {
-        message: sendingAnswer.message,
-      };
-    } catch (error) {
-      throw error;
-    }
+    return {
+      message: sendingAnswer.message,
+    };
   }
 }
