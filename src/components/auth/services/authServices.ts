@@ -12,22 +12,11 @@ const mailJetService = new MailJetService();
 
 export class AuthService {
   async askForDeactivation(user: userReq): Promise<serviceAnswer> {
-    try {
-      let sendResponse = await mailJetService.sendMailDeactivation(user._id);
+    let sendResponse = await mailJetService.sendMailDeactivation(user._id);
 
-      return {
-        message: sendResponse.message,
-      };
-    } catch (error: unknown) {
-      if (typeof error === "object" && error !== null && "issues" in error) {
-        const validationError = error as { issues: [{ message: string }] };
-        if (validationError.issues.length > 0) {
-          throw new errors.UnauthorizedError(validationError.issues[0].message);
-        }
-      }
-
-      throw error;
-    }
+    return {
+      message: sendResponse.message,
+    };
   }
 
   async insertUser(body: user): Promise<serviceAnswer> {
@@ -166,40 +155,36 @@ export class AuthService {
   }
 
   async toggleUserActivation(userId: string): Promise<serviceAnswer> {
-    try {
-      const db = getDb();
+    const db = getDb();
 
-      if (!userId) {
-        throw new errors.BadRequestError("Invalid or missing userId.");
-      }
-
-      const user = await db
-        .collection("Users_Collection")
-        .findOne({ _id: new ObjectId(userId) });
-
-      if (!user) {
-        throw new errors.NotFoundError("User not found.");
-      }
-
-      const newIsActiveStatus = !user.isActive;
-
-      const result = await db
-        .collection("Users_Collection")
-        .updateOne(
-          { _id: new ObjectId(userId) },
-          { $set: { isActive: newIsActiveStatus } }
-        );
-
-      if (result.matchedCount === 0) {
-        throw new errors.NotFoundError("User not found.");
-      }
-
-      return {
-        message: `User activation status successfully toggled to ${newIsActiveStatus}.`,
-      };
-    } catch (error) {
-      throw error;
+    if (!userId) {
+      throw new errors.BadRequestError("Invalid or missing userId.");
     }
+
+    const user = await db
+      .collection("Users_Collection")
+      .findOne({ _id: new ObjectId(userId) });
+
+    if (!user) {
+      throw new errors.NotFoundError("User not found.");
+    }
+
+    const newIsActiveStatus = !user.isActive;
+
+    const result = await db
+      .collection("Users_Collection")
+      .updateOne(
+        { _id: new ObjectId(userId) },
+        { $set: { isActive: newIsActiveStatus } }
+      );
+
+    if (result.matchedCount === 0) {
+      throw new errors.NotFoundError("User not found.");
+    }
+
+    return {
+      message: `User activation status successfully toggled to ${newIsActiveStatus}.`,
+    };
   }
 
   async userRegister(body: bodyReq) {
