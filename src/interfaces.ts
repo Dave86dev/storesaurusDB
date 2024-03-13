@@ -32,3 +32,13 @@ export interface serviceAnswer {
   message?: string;
   data?: any;
 }
+
+export interface bodyReq {
+  preEmail? : string
+  email?: string
+  token?: string
+}
+
+export interface userReq {
+  _id : string
+}
