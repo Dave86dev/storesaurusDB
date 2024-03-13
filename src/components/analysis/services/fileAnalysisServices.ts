@@ -1,14 +1,14 @@
 import * as errors from "restify-errors";
 import { getDb } from "../../../db";
 import { csvAnalysisHelper } from "./helpers/csvAnalysisHelper";
-import { serviceAnswer } from "../../../interfaces";
+import { bodyReq, serviceAnswer, userReq } from "../../../interfaces";
 import GridFsService from "../../../services/gridFsSservices";
 
 export class FileAnalysisService {
-  async analyzeFile(fileId: string, _id: string): Promise<serviceAnswer> {
+  async analyzeFile(body: bodyReq, user: userReq): Promise<serviceAnswer> {
     let gridFsService = new GridFsService(getDb());
 
-    const result = await gridFsService.getFile(fileId, _id);
+    const result = await gridFsService.getFile(body.fileId, user._id);
 
     const { content: fileStream, mimeType } = result.data;
 
@@ -23,26 +23,25 @@ export class FileAnalysisService {
   }
 
   async keepAnalysis(
-    fileId: string,
-    userId: string,
-    analysisData: any
+    body: bodyReq,
+    user: userReq,
   ): Promise<serviceAnswer> {
     const db = getDb();
 
-    if (!fileId || !userId || !analysisData) {
+    if (!body.fileId || !user._id || !body.analysisData) {
       throw new errors.BadRequestError(
         "Missing required parameters: fileId, userId, or analysisData"
       );
     }
 
     const analysisDocument = {
-      fileId: fileId,
-      userId: userId,
+      fileId: body.fileId,
+      userId: user._id,
       analysisDate: new Date(),
-      analysisResults: analysisData,
+      analysisResults: body.analysisData,
     };
 
-    await db.collection("File_Analysis").insertOne(analysisDocument);
+    await db.collection("Analysis_Collection").insertOne(analysisDocument);
 
     return {
       message: "Succesful analysis storage",

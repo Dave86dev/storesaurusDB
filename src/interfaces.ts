@@ -38,6 +38,8 @@ export interface bodyReq {
   email?: string
   token?: string
   userId?: string
+  fileId?: string
+  analysisData: any
 }
 
 export interface userReq {

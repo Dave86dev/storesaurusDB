@@ -11,7 +11,7 @@ const fileManagementServices = new FileManagementServices();
 
 const router = express.Router();
 
-router.delete("/delete", authJwt, generator(fileManagementServices.deleteUserFile, ["user"]));
+router.delete("/delete", authJwt, generator(fileManagementServices.deleteUserFile, ["body", "user"]));
 router.post("/retrieval", authJwt, generator(fileRetrievalService.searchUserFiles, ["user"]));
 router.post(
   "/upload",
