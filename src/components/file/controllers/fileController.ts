@@ -1,7 +1,7 @@
 import * as errors from "restify-errors";
-import GridFsService from "../../../../services/gridFsSservices";
+import GridFsService from "../../../services/gridFsSservices";
 import { NextFunction, Request, Response } from "express";
-import { getDb } from "../../../../db";
+import { getDb } from "../../../db";
 import { FileRetrievalService } from "../services/fileRetrievalServices";
 
 let gridFsService: GridFsService;

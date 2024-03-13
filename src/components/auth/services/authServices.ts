@@ -1,11 +1,13 @@
 import * as errors from "restify-errors";
 import * as v from "valibot";
-import { user, userDB } from "../../models/user";
-import { credentials, serviceAnswer } from "../../../../interfaces";
-import { generateToken } from "../../../../utils/generateToken";
-import { getDb } from "../../../../db";
+import { user, userDB } from "../models/user";
+import { credentials, serviceAnswer } from "../../../interfaces";
+import { generateToken } from "../../../utils/generateToken";
+import { getDb } from "../../../db";
 import { emailSchema, userNameSchema } from "./helpers/validateData";
 import { MailJetService } from "./helpers/mailJetServices";
+import { ObjectId } from "mongodb";
+import { Request, Response, NextFunction } from "express";
 
 const mailJetService = new MailJetService();
 
@@ -157,6 +159,54 @@ export class AuthService {
       }
 
       throw error;
+    }
+  }
+
+  async toggleUserActivation(userId: string): Promise<serviceAnswer> {
+    try {
+      const db = getDb();
+
+      if (!userId) {
+        throw new errors.BadRequestError("Invalid or missing userId.");
+      }
+
+      const user = await db
+        .collection("Users_Collection")
+        .findOne({ _id: new ObjectId(userId) });
+
+      if (!user) {
+        throw new errors.NotFoundError("User not found.");
+      }
+
+      const newIsActiveStatus = !user.isActive;
+
+      const result = await db
+        .collection("Users_Collection")
+        .updateOne(
+          { _id: new ObjectId(userId) },
+          { $set: { isActive: newIsActiveStatus } }
+        );
+
+      if (result.matchedCount === 0) {
+        throw new errors.NotFoundError("User not found.");
+      }
+
+      return {
+        message: `User activation status successfully toggled to ${newIsActiveStatus}.`,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async userRegister(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.status(200).json({
+        message: `Code provided for ${req.body.email} authentication succesful`,
+        data: req.body.email,
+      });
+    } catch (error) {
+      next(error);
     }
   }
 }
