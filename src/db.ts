@@ -36,7 +36,7 @@ const setupIndexes = async () => {
 
 export const getDb = (): Db => {
   if (!db) {
-    throw new Error("Database connection still not established.");
+    throw new Error("INTERNAL_SERVER_ERROR");
   }
   return db;
 };

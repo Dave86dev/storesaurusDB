@@ -12,7 +12,7 @@ export default class GridFsService {
 
   async deleteFile(fileId: string | undefined): Promise<serviceAnswer> {
     if (!fileId) {
-      throw new errors.BadRequestError("Missing the mandatory fileId.");
+      throw new errors.BadRequestError("VALIDATION_FAILED");
     }
 
     await this.bucket.delete(new ObjectId(fileId));
@@ -25,7 +25,7 @@ export default class GridFsService {
     userId: string
   ): Promise<serviceAnswer> {
     if (!fileId) {
-      throw new errors.BadRequestError("Missing the mandatory fileId");
+      throw new errors.BadRequestError("VALIDATION_FAILED");
     }
 
     const files = await this.bucket
@@ -33,7 +33,7 @@ export default class GridFsService {
       .toArray();
 
     if (files.length === 0) {
-      throw new errors.NotFoundError("File not found.");
+      throw new errors.NotFoundError("RESOURCE_NOT_FOUND");
     }
 
     const mimeType = files[0].metadata?.mimetype || "application/octet-stream";
@@ -42,7 +42,7 @@ export default class GridFsService {
 
     if (owner !== userId) {
       throw new errors.ForbiddenError(
-        "User does not have permission for this action"
+        "RESOURCE_ACCESS_DENIED"
       );
     }
 
@@ -60,7 +60,7 @@ export default class GridFsService {
 
       downloadStream.on("end", () => {
         if (chunks.length === 0) {
-          reject(new errors.NotFoundError("File not found or is empty"));
+          reject(new errors.NotFoundError("RESOURCE_NOT_FOUND"));
         } else {
           const fileBuffer = Buffer.concat(chunks);
           const content = fileBuffer.toString("utf8");

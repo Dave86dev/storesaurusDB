@@ -6,7 +6,7 @@ export class FileRetrievalService {
     const db = getDb();
 
     if (!user._id) {
-      throw new errors.BadRequestError("Missing the mandatory userId");
+      throw new errors.BadRequestError("VALIDATION_FAILED");
     }
 
     const userFiles = await db
@@ -15,7 +15,7 @@ export class FileRetrievalService {
       .toArray();
 
     if (!userFiles || userFiles.length === 0) {
-      throw new errors.NotFoundError("No files found for the given user Id");
+      throw new errors.NotFoundError("RESOURCE_NOT_FOUND");
     }
 
     return {

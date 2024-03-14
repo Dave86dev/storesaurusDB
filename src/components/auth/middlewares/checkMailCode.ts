@@ -20,7 +20,7 @@ export const checkMailCode = async (
     });
 
     if (!verifiedUser) {
-      throw new errors.BadRequestError("The submitted code is incorrect");
+      throw new errors.BadRequestError("VALIDATION_FAILED");
     }
 
     next();
