@@ -7,13 +7,13 @@ export const authJwt = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return next(new errors.UnauthorizedError("Authentication token required"));
+    return next(new errors.UnauthorizedError("AUTH_TOKEN_MISSING"));
   }
 
   const parts = authHeader.split(" ");
   if (parts.length !== 2 || parts[0] !== "Bearer") {
     return next(
-      new errors.BadRequestError("Invalid authentication token format")
+      new errors.BadRequestError("VALIDATION_FAILED")
     );
   }
 
@@ -25,7 +25,7 @@ export const authJwt = (req: Request, res: Response, next: NextFunction) => {
       req.user = decodedToken;
     } else {
       return next(
-        new errors.UnauthorizedError("Invalid or malformed token payload")
+        new errors.UnauthorizedError("AUTH_TOKEN_FAILED")
       );
     }
     next();
@@ -38,7 +38,7 @@ export const authJwt = (req: Request, res: Response, next: NextFunction) => {
       const name = (error as { name: string }).name;
 
       if (name === "TokenExpiredError") {
-        return next(new errors.UnauthorizedError("Token expired"));
+        return next(new errors.UnauthorizedError("AUTH_TOKEN_INVALID"));
       }
     }
   }

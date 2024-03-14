@@ -23,7 +23,7 @@ export class FileManagementServices {
     gridFsService = new GridFsService(getDb());
 
     if (!file) {
-      throw new errors.BadRequestError("No file uploaded.");
+      throw new errors.BadRequestError("VALIDATION_FAILED");
     }
 
     const uploadAnswer = await gridFsService.saveFile(file, user._id);

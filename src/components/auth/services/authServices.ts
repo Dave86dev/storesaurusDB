@@ -55,42 +55,20 @@ export class AuthService {
     }
   }
 
-  async loginUser(body: bodyReq): Promise<serviceAnswer> {
-    try {
-      const db = getDb();
-      const email = v.parse(emailSchema, body.email);
+  async loginUser(body: userDB): Promise<serviceAnswer> {
+    const userForToken: userDB = {
+      _id: body._id,
+      email: body.email,
+      role: body.role,
+      isActive: body.isActive,
+    };
 
-      const user = await db.collection("Users_Collection").findOne({
-        email: email,
-      });
+    const jwt = generateToken(userForToken);
 
-      if (!user) {
-        throw new errors.NotFoundError("User is non-existant in our database");
-      }
-
-      const userForToken: userDB = {
-        _id: user._id,
-        email: user.email,
-        role: user.role,
-        isActive: user.isActive,
-      };
-
-      const jwt = generateToken(userForToken);
-
-      return {
-        message: "User authentication ok",
-        data: jwt,
-      };
-    } catch (error: unknown) {
-      if (typeof error === "object" && error !== null && "issues" in error) {
-        const validationError = error as { issues: [{ message: string }] };
-        if (validationError.issues.length > 0) {
-          throw new errors.UnauthorizedError(validationError.issues[0].message);
-        }
-      }
-
-      throw error;
-    }
+    return {
+      message: "User authentication ok",
+      data: jwt,
+    };
   }
 
   async preLoginEmail(body: bodyReq): Promise<serviceAnswer> {
@@ -103,13 +81,14 @@ export class AuthService {
       });
 
       if (!user) {
-        throw new errors.NotFoundError("User is non-existant in our database");
+        throw new errors.NotFoundError("USER_NOT_FOUND");
       }
 
       let sendResponse = await mailJetService.sendMailCode(email);
 
       return {
         message: sendResponse.message,
+        data: user,
       };
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null && "issues" in error) {
@@ -134,7 +113,7 @@ export class AuthService {
       });
 
       if (user) {
-        throw new errors.NotFoundError("User already exists in our database");
+        throw new errors.ConflictError("USER_ALREADY_EXISTS");
       }
 
       let sendResponse = await mailJetService.sendMailCode(email);
@@ -158,7 +137,7 @@ export class AuthService {
     const db = getDb();
 
     if (!body.userId) {
-      throw new errors.BadRequestError("Invalid or missing userId.");
+      throw new errors.BadRequestError("VALIDATION_FAILED");
     }
 
     const user = await db
@@ -166,7 +145,7 @@ export class AuthService {
       .findOne({ _id: new ObjectId(body.userId) });
 
     if (!user) {
-      throw new errors.NotFoundError("User not found.");
+      throw new errors.NotFoundError("USER_NOT_FOUND");
     }
 
     const newIsActiveStatus = !user.isActive;
@@ -179,7 +158,7 @@ export class AuthService {
       );
 
     if (result.matchedCount === 0) {
-      throw new errors.NotFoundError("User not found.");
+      throw new errors.NotFoundError("USER_NOT_FOUND");
     }
 
     return {
