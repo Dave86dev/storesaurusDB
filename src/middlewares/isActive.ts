@@ -6,7 +6,7 @@ export const isActive = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user.isActive) {
     return next(
       new errors.UnauthorizedError(
-        "Inactive account already, please contact administration"
+        "AUTH_CREDENTIALS_INVALID"
       )
     );
   }

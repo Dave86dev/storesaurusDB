@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (req.user.role !== "admin") {
-    return next(new errors.ForbiddenError("You do not have permission"));
+    return next(new errors.ForbiddenError("PERMISSION_DENIED"));
   }
   next();
 };

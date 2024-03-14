@@ -13,7 +13,7 @@ export class FileAnalysisService {
     const { content: fileStream, mimeType } = result.data;
 
     if (mimeType !== "text/csv")
-      throw new errors.UnsupportedMediaTypeError("Unsupported Media Type");
+      throw new errors.UnsupportedMediaTypeError("UNSUPPORTED_MEDIA_TYPE");
     const analysis = await csvAnalysisHelper(fileStream);
 
     return {
@@ -30,7 +30,7 @@ export class FileAnalysisService {
 
     if (!body.fileId || !user._id || !body.analysisData) {
       throw new errors.BadRequestError(
-        "Missing required parameters: fileId, userId, or analysisData"
+        "VALIDATION_FAILED"
       );
     }
 
