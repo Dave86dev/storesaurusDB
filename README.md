@@ -6,22 +6,35 @@
 # storesaurusdb
 
 <p>
-  The backend for the Storesaurus project is designed to streamline your experience. By registering, you gain access to a platform where you can upload your .csv files and avail yourself of comprehensive analyses. Our system, as robust as a dinosaur, will identify any gaps and verify the accuracy of your data's "DNA". 
+  The backend for the Storesaurus project is designed to streamline your experience. Register and gain access to a platform where you can upload your .csv files and avail yourself of comprehensive analyses. Our system, as robust as a dinosaur, will identify any gaps and verify the accuracy of your data's "DNA". 
 </p>
+
+📁 __GridFs__ File Storage   
+✉️ __Magic Link__ Auth System  
+🔎 __Papaparse__ File Analysis  
+🔒 __Valibot__ Validation  
+  
+
 
 ## Table of Contents 
 
-- [About](#about)
 - [Stack](#stack)
+- [About](#about)
 - [Features](#features-)
 - [Installation](#installation-)
 - [Development](#development)
 - [API Endpoints](#api-endpoints-)
 - [Author](#author)
 
+## Stack 
+
+<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"><img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=Express&logoColor=white"><img src="https://img.shields.io/badge/-Nodejs-43853d?style=for-the-badge&logo=Node.js&logoColor=white"><img src="https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white">
+
 ## About
 
-This project is a backend application currently in the early stages of development, designed with a strong focus on domain logic. This is effectively demonstrated through the encapsulation of functionality within services and entities, such as the FileAnalysisService, and the implementation of domain-specific types like csvAnalysis, illustrating the application of Domain-Driven Design (DDD) principles.
+This backend's architecture leverages a unique middleware generator pattern, utilizing lodash for parameter handling, to create dynamic and reusable middleware functions across its Express-based routing system. The generator function facilitates the abstraction of common request-processing logic into a versatile structure that accepts a callback function and a list of parameter names to extract from the request object. By employing lodash's get function, it securely retrieves these parameters, ensuring the seamless execution of operations like user authentication, file and analysis management with minimal boilerplate.
+
+The architecture exemplifies a minimalist and efficient approach to middleware design, allowing developers to easily define complex request handling logic in a concise and readable manner. This design pattern not only simplifies the development and maintenance of the backend by reducing redundancy but also enhances scalability and flexibility, enabling the quick adaptation to new requirements or changes in business logic with minimal impact on the overall codebase.
 
 Leveraging TypeScript in strict mode, the application integrates seamlessly with Express and Node.js to directly utilize the MongoDB driver. This approach eschews the use of an Object Document Mapper (ODM) like Mongoose, thereby optimizing performance.
 
@@ -31,10 +44,6 @@ For file management and analysis, the application utilizes GridFS for storage, M
 
 Error management across the application is meticulously handled by restify-errors, ensuring consistent and clear error handling practices.
 
-
-## Stack 
-
-<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"><img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=Express&logoColor=white"><img src="https://img.shields.io/badge/-Nodejs-43853d?style=for-the-badge&logo=Node.js&logoColor=white"><img src="https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white">
 
 ## Features
 
@@ -66,13 +75,13 @@ npm run dev
 
 ## Development
 
-While the project is currently in the early stages of backend development, it is on the brink of substantial advancements. A key feature on the roadmap is the integration of advanced file management capabilities, promising to significantly enhance the application's functionality. The successful implementation of an email/magic link system marks a major milestone.
+While the project is currently in the early stages of backend development, it is on the brink of substantial advancements. A key feature on the roadmap is the integration of advanced file management capabilities, promising to significantly enhance the application's functionality. The actual successful implementation of an email/magic link system marks a major milestone.
 
 Concurrently, the planning phase for the frontend development is underway, with expectations set on crafting a user interface with React-Vite-TypeScript.
 
 ## API Endpoints 
 
-Version 0.5 11/03/2024
+Version 0.5 15/03/2024
 
 *(Upcoming swagger documentation for a complete documentation of the API endpoints).*
 
