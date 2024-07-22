@@ -3,6 +3,8 @@ import { GridFSBucket, Db, ObjectId } from "mongodb";
 import { PassThrough } from "stream";
 import { fileData, serviceAnswer } from "../interfaces";
 
+// import { Request } from 'express';
+
 export default class GridFsService {
   private readonly bucket: GridFSBucket;
 

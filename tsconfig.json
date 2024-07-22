@@ -9,6 +9,7 @@
     "outDir": "dist",
     "types": ["node"],
     "lib": ["es2021"],
-    "strict": true
+    "strict": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   }
 }
