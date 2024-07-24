@@ -81,7 +81,7 @@ Concurrently, the planning phase for the frontend development is underway, with 
 
 ## API Endpoints 
 
-Version 0.5 15/03/2024
+Version 0.5.5 24/07/2024
 
 *(Upcoming swagger documentation for a complete documentation of the API endpoints).*
 
@@ -93,21 +93,129 @@ Version 0.5 15/03/2024
 ##### Analysis 
 
 - `POST /analysis/analyze` - Analyse and get a diagnosis in return.
+
+    body:
+    ``` js
+        {
+            {
+              "email": "test@email.com",
+              "token": "mongodbToken",
+              "userId": "mongodbUserId",
+              "fileId": "mongodbFileId",
+              "analysisData": "file"
+            }
+        }
+    ```
+
 - `POST /analysis/save` - Keep your analysis stored on our database.
+
+    body:
+    ``` js
+        {
+            {
+              "email": "test@email.com",
+              "token": "mongodbToken",
+              "userId": "mongodbUserId",
+              "fileId": "mongodbFileId",
+              "analysisData": "file"
+            }
+        }
+    ```
 
 ##### Authentication 
 
 - `POST /auth/deactivate` - Ask administration to deactivate your account.
+
+    body:
+    ``` js
+        {
+            {
+              "_id": "mongoId"
+            }
+        }
+    ```
+
 - `POST /auth/prelogin` - First step to log an existing user.
+
+    body:
+    ``` js
+        {
+            {
+              "email": "test@email.com"
+            }
+        }
+    ```
+
 - `POST /auth/login` - Second and final step to log an existing user.
+
+    body:
+    ``` js
+        {
+            {
+              "_id": "mongoId"
+              "email": "test@email.com",
+              "role": "admin" | "user",
+              "isActive": true,
+            }
+        }
+    ```
+
 - `POST /auth/preregister` - First step to register a new user.
+
+    body:
+    ``` js
+        {
+            {
+              "email": "test@email.com"
+            }
+        }
+    ```
+
 - `POST /auth/register` - Second step in the process of registering a new user.
+
+    body:
+    ``` js
+        {
+            {
+              "email": "test@email.com"
+            }
+        }
+    ```
+
 - `POST /auth/registerfinal` - Final step in registering a new user.
+
+    body:
+    ``` js
+        {
+            {
+              "_id": "mongoId",
+              "username": "John Carmack",
+              "email": "email@test.com",
+              "role" : "admin" | "user",
+              "isActive": true
+            }
+        }
+    ```
 
 ##### File
 
 - `POST /file/delete`- Deletes a file from the database.
+
+    body:
+    ``` js
+        {
+            {
+              "email": "test@email.com",
+              "token": "mongodbToken",
+              "userId": "mongodbUserId",
+              "fileId": "mongodbFileId",
+              "analysisData": "file"
+            }
+        }
+    ```
+
 - `POST /file/retrieval` - Retrieve files uploaded by a certain user.
+
 - `POST /file/upload` - Upload a .csv file to the database for further analysis.
 
 </details>
@@ -118,6 +226,19 @@ Version 0.5 15/03/2024
 ##### Authentication 
 
 - `POST /admin/auth/toggle` - Toggle activation and deactivation of a certain user.
+
+    body:
+    ``` js
+        {
+            {
+              "email": "test@email.com",
+              "token": "mongodbToken",
+              "userId": "mongodbUserId",
+              "fileId": "mongodbFileId",
+              "analysisData": "file"
+            }
+        }
+    ```
 
 </details>
 

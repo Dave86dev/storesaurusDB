@@ -74,7 +74,7 @@ export class AuthService {
   async preLoginEmail(body: bodyReq): Promise<serviceAnswer> {
     try {
       const db = getDb();
-      const email = v.parse(emailSchema, body.preEmail);
+      const email = v.parse(emailSchema, body.email);
 
       const user = await db.collection("Users_Collection").findOne({
         email: email,
@@ -106,7 +106,7 @@ export class AuthService {
     try {
       const db = getDb();
 
-      const email = v.parse(emailSchema, body.preEmail);
+      const email = v.parse(emailSchema, body.email);
 
       const user = await db.collection("Users_Collection").findOne({
         email: email,
